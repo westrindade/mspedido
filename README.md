@@ -8,8 +8,6 @@ Tech-challenge Fase 4 com temática de criar microserviço.
 
 ![Spring](https://skillicons.dev/icons?i=spring)Spring Boot 3.1.3
 
-[OpenFeign](https://skillicons.dev/icons?query=openfeign) Openfeign
-
 ![Spring](https://skillicons.dev/icons?i=spring)
 Spring Data JPA
 
