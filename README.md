@@ -36,6 +36,6 @@ Docker
 
 - [Denis Benjamim](https://www.github.com/denisbenjamim)
 - [Matheus Lot Rizzo](https://www.github.com/MatheusLotRizzo)
-- [Bruno de Jesus](https://www.github.com/brujp)
 - [Weslei Trindade](https://www.github.com/westrindade)
 - [Nicole Bidigaray](https://www.github.com/Nicole-Bidigaray)
+- [Lukas Barcellos](https://www.github.com/Lukas-Barcellos)
