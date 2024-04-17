@@ -18,9 +18,9 @@ public class AlterarStatusPedidoParaAguardandoEnvio {
     @Autowired
     PedidoService pedidoService;
 
-    private final long CINCO_SEGUNDO = 5000;
+    private final long SEGUNDOS = 1000;
 
-    @Scheduled(fixedRate = CINCO_SEGUNDO)
+    @Scheduled(fixedRate = SEGUNDOS)
     public void iniciar() {
 
         System.out.println("Iniciando AlterarStatusPedidoParaAguardandoEnvio [" + LocalDateTime.now() + "]");
@@ -34,7 +34,7 @@ public class AlterarStatusPedidoParaAguardandoEnvio {
     }
 
     private void executar(PedidoDtoResponse pedidoDtoResponse) {
-        PedidoEntity pedido = new PedidoEntity(pedidoDtoResponse.id());
+        PedidoEntity pedido = new PedidoEntity(pedidoDtoResponse.id(),pedidoDtoResponse.statusPedido());
         try {
             pedido.aguardarEnvioPedido();
             pedidoService.alterarStatusPedidoParaAguardarEnvio(pedido.getId());

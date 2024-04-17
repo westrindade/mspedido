@@ -18,9 +18,9 @@ public class AlterarStatusPedidoParaPedidoEnviado {
     @Autowired
     PedidoService pedidoService;
 
-    private final long CINCO_SEGUNDO = 5000;
+    private final long SEGUNDOS = 1000;
 
-    @Scheduled(fixedRate = CINCO_SEGUNDO)
+    @Scheduled(fixedRate = SEGUNDOS)
     public void iniciar() {
 
         System.out.println("Iniciando AlterarStatusPedidoParaPedidoEnviado [" + LocalDateTime.now() + "]");
@@ -34,10 +34,10 @@ public class AlterarStatusPedidoParaPedidoEnviado {
     }
 
     private void executar(PedidoDtoResponse pedidoDtoResponse) {
-        PedidoEntity pedido = new PedidoEntity(pedidoDtoResponse.id());
+        PedidoEntity pedido = new PedidoEntity(pedidoDtoResponse.id(),pedidoDtoResponse.statusPedido());
         try {
             pedido.enviarPedido();
-            pedidoService.enviarPedito(pedido.getId());
+            pedidoService.enviarPedido(pedido.getId());
         } catch ( BusinessException  ex) {
             System.err.println("executar - Erro [ " + ex.getMessage() + "]");
         }
