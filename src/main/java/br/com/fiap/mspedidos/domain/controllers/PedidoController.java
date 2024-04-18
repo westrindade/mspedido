@@ -2,7 +2,7 @@ package br.com.fiap.mspedidos.domain.controllers;
 
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoRequest;
 import br.com.fiap.mspedidos.domain.entities.StatusPedidoEnum;
-import br.com.fiap.mspedidos.domain.expections.BusinessException;
+import br.com.fiap.mspedidos.domain.excections.BusinessException;
 import br.com.fiap.mspedidos.domain.service.PedidoService;
 import br.com.fiap.mspedidos.infra.handler.MessageErrorHandler;
 import br.com.fiap.mspedidos.infra.swagger.annotations.ApiResponseSwaggerCreate;
@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import br.com.fiap.mspedidos.infra.Utils;
+
 @RestController
 public class PedidoController {
 
@@ -26,11 +28,9 @@ public class PedidoController {
     @ApiResponseSwaggerOk
     @ApiResponseSwaggerNoContent
     public ResponseEntity<?> buscarPedidoPorId(@PathVariable Long id) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(pedidoService.buscarPedidoPorId(id));
-        } catch (BusinessException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MessageErrorHandler.create(e.getMessage()));
-        }
+        return Utils.response(HttpStatus.OK,
+                () -> pedidoService.buscarPedidoPorId(id)
+        );
     }
 
     @GetMapping("/cliente/{id}")
@@ -38,57 +38,49 @@ public class PedidoController {
     @ApiResponseSwaggerOk
     @ApiResponseSwaggerNoContent
     public ResponseEntity<?> listarPedidosPorCliente(@PathVariable Long id) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(pedidoService.listarPedidosPorCliente(id));
-        } catch (BusinessException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MessageErrorHandler.create(e.getMessage()));
-        }
+        return Utils.response(HttpStatus.OK,
+                () -> pedidoService.listarPedidosPorCliente(id)
+        );
     }
     @GetMapping("/status/{status}")
     @Operation(summary = "Buscar produto por status")
     @ApiResponseSwaggerOk
     @ApiResponseSwaggerNoContent
     public ResponseEntity<?> listarPedidosPorStatus(@PathVariable StatusPedidoEnum status) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(pedidoService.listarPedidosPorStatus(status));
-        } catch (BusinessException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MessageErrorHandler.create(e.getMessage()));
-        }
+        return Utils.response(HttpStatus.OK,
+                () -> pedidoService.listarPedidosPorStatus(status)
+        );
     }
     @PostMapping
     @Operation(summary = "Cadastrar um novo pedido")
     @ApiResponseSwaggerCreate
     @ApiResponseNotFoundJson
     public ResponseEntity<?> criarPedido(@RequestBody PedidoDtoRequest pedido){
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(pedidoService.criar(pedido));
-        } catch (BusinessException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(MessageErrorHandler.create(e.getMessage()));
-        }
+        return Utils.response(HttpStatus.CREATED,
+                () -> pedidoService.criar(pedido)
+        );
     }
     @PutMapping("/{id}/confirmar-pagamento")
     @Operation(summary = "Confirmar pagamento")
     @ApiResponseSwaggerCreate
     @ApiResponseNotFoundJson
     public ResponseEntity<?> confirmarPagamento(@PathVariable Long id){
-        try {
-            pedidoService.confirmarPagamento(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Pagamento Confirmado");
-        } catch (BusinessException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MessageErrorHandler.create(e.getMessage()));
-        }
+        return Utils.response(HttpStatus.NO_CONTENT,
+                () -> {
+                    pedidoService.confirmarPagamento(id);
+                    return "Pagamento Confirmado";
+                });
     }
     @PutMapping("/{id}/cancelar-pedido")
     @Operation(summary = "Cancelar pedido")
     @ApiResponseSwaggerCreate
     @ApiResponseNotFoundJson
     public ResponseEntity<?> cancelarPedido(@PathVariable Long id){
-        try {
-            pedidoService.cancelarPedido(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Pedido Cancelado");
-        } catch (BusinessException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MessageErrorHandler.create(e.getMessage()));
-        }
+        return Utils.response(HttpStatus.NO_CONTENT,
+                () -> {
+                    pedidoService.cancelarPedido(id);
+                    return "Pagamento Cancelado";
+                });
     }
 }
 

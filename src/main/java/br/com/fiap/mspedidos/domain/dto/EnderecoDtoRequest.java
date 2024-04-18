@@ -1,7 +1,7 @@
 package br.com.fiap.mspedidos.domain.dto;
 
 import br.com.fiap.mspedidos.domain.entities.EnderecoPedido;
-import br.com.fiap.mspedidos.domain.expections.BusinessException;
+import br.com.fiap.mspedidos.domain.excections.BusinessException;
 
 public record EnderecoDtoRequest(
         String cep,

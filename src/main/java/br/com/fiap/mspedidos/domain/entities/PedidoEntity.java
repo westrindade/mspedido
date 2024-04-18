@@ -3,7 +3,7 @@ package br.com.fiap.mspedidos.domain.entities;
 import jakarta.validation.constraints.NotNull;
 
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoResponse;
-import br.com.fiap.mspedidos.domain.expections.BusinessException;
+import br.com.fiap.mspedidos.domain.excections.BusinessException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;

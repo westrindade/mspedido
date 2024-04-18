@@ -2,7 +2,7 @@ package br.com.fiap.mspedidos.domain.dto;
 
 import br.com.fiap.mspedidos.domain.entities.FormaPagamentoEnum;
 import br.com.fiap.mspedidos.domain.entities.ItemEntity;
-import br.com.fiap.mspedidos.domain.expections.BusinessException;
+import br.com.fiap.mspedidos.domain.excections.BusinessException;
 
 import java.util.ArrayList;
 import java.util.List;
