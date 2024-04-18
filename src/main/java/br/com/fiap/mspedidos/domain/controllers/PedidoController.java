@@ -26,7 +26,6 @@ public class PedidoController {
     @GetMapping("/{id}")
     @Operation(summary = "Buscar produto por ID")
     @ApiResponseSwaggerOk
-    @ApiResponseSwaggerNoContent
     public ResponseEntity<?> buscarPedidoPorId(@PathVariable Long id) {
         return Utils.response(HttpStatus.OK,
                 () -> pedidoService.buscarPedidoPorId(id)
@@ -36,7 +35,6 @@ public class PedidoController {
     @GetMapping("/cliente/{id}")
     @Operation(summary = "Buscar produto por ID de cliente")
     @ApiResponseSwaggerOk
-    @ApiResponseSwaggerNoContent
     public ResponseEntity<?> listarPedidosPorCliente(@PathVariable Long id) {
         return Utils.response(HttpStatus.OK,
                 () -> pedidoService.listarPedidosPorCliente(id)
@@ -45,7 +43,6 @@ public class PedidoController {
     @GetMapping("/status/{status}")
     @Operation(summary = "Buscar produto por status")
     @ApiResponseSwaggerOk
-    @ApiResponseSwaggerNoContent
     public ResponseEntity<?> listarPedidosPorStatus(@PathVariable StatusPedidoEnum status) {
         return Utils.response(HttpStatus.OK,
                 () -> pedidoService.listarPedidosPorStatus(status)
@@ -54,7 +51,6 @@ public class PedidoController {
     @PostMapping
     @Operation(summary = "Cadastrar um novo pedido")
     @ApiResponseSwaggerCreate
-    @ApiResponseNotFoundJson
     public ResponseEntity<?> criarPedido(@RequestBody PedidoDtoRequest pedido){
         return Utils.response(HttpStatus.CREATED,
                 () -> pedidoService.criar(pedido)
@@ -62,10 +58,9 @@ public class PedidoController {
     }
     @PutMapping("/{id}/confirmar-pagamento")
     @Operation(summary = "Confirmar pagamento")
-    @ApiResponseSwaggerCreate
-    @ApiResponseNotFoundJson
+    @ApiResponseSwaggerOk
     public ResponseEntity<?> confirmarPagamento(@PathVariable Long id){
-        return Utils.response(HttpStatus.NO_CONTENT,
+        return Utils.response(HttpStatus.OK,
                 () -> {
                     pedidoService.confirmarPagamento(id);
                     return "Pagamento Confirmado";
@@ -73,10 +68,9 @@ public class PedidoController {
     }
     @PutMapping("/{id}/cancelar-pedido")
     @Operation(summary = "Cancelar pedido")
-    @ApiResponseSwaggerCreate
-    @ApiResponseNotFoundJson
+    @ApiResponseSwaggerOk
     public ResponseEntity<?> cancelarPedido(@PathVariable Long id){
-        return Utils.response(HttpStatus.NO_CONTENT,
+        return Utils.response(HttpStatus.OK,
                 () -> {
                     pedidoService.cancelarPedido(id);
                     return "Pagamento Cancelado";
