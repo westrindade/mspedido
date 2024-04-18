@@ -1,6 +1,6 @@
 package br.com.fiap.mspedidos.infra.swagger.annotations.responses;
 
-import br.com.fiap.mspedidos.infra.MessageErrorHandler;
+import br.com.fiap.mspedidos.infra.handler.MessageErrorHandler;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

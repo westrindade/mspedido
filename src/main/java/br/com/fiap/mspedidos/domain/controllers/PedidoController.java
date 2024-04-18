@@ -4,7 +4,7 @@ import br.com.fiap.mspedidos.domain.dto.PedidoDtoRequest;
 import br.com.fiap.mspedidos.domain.entities.StatusPedidoEnum;
 import br.com.fiap.mspedidos.domain.expections.BusinessException;
 import br.com.fiap.mspedidos.domain.service.PedidoService;
-import br.com.fiap.mspedidos.infra.MessageErrorHandler;
+import br.com.fiap.mspedidos.infra.handler.MessageErrorHandler;
 import br.com.fiap.mspedidos.infra.swagger.annotations.ApiResponseSwaggerCreate;
 import br.com.fiap.mspedidos.infra.swagger.annotations.ApiResponseSwaggerNoContent;
 import br.com.fiap.mspedidos.infra.swagger.annotations.ApiResponseSwaggerOk;
