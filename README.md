@@ -1,5 +1,5 @@
 
-# 🚀 mpedido
+# 🚀 mspedido
 Tech-challenge Fase 4 com temática de criar microserviço. 
 
 ## 🛠️ Tecnologias
@@ -10,6 +10,9 @@ Tech-challenge Fase 4 com temática de criar microserviço.
 
 ![Spring](https://skillicons.dev/icons?i=spring)
 Spring Data JPA
+
+![Spring](https://skillicons.dev/icons?i=spring)
+Spring Cloud
 
 ![Spring](https://skillicons.dev/icons?i=spring)
 Spring Doc/Swagger
