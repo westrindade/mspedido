@@ -1,5 +1,6 @@
 package br.com.fiap.mspedidos.domain.entities;
 
+import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -24,16 +25,29 @@ public class ItemEntity {
     public ItemEntity() {
     }
 
-    public ItemEntity(Long idProduto, Long quantidade) {
+    public ItemEntity(Long idProduto, Long quantidade) throws BusinessException {
+        if (idProduto == 0){
+            throw new BusinessException("Produto não informado");
+        }
+        if (quantidade == 0){
+            throw new BusinessException("Quantidade deve ser maior que zero");
+        }
         this.idProduto = idProduto;
         this.quantidade = quantidade;
+        this.valorTotal = BigDecimal.ZERO;
     }
 
-    public void setPedido(PedidoEntity pedido) {
+    public void informarPedido(PedidoEntity pedido) throws BusinessException {
+        if (pedido == null){
+            throw new BusinessException("Pedido deve ser informado");
+        }
         this.pedido = pedido;
     }
 
-    public void setValorTotal(BigDecimal valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) throws BusinessException {
+        if (valorTotal.compareTo(BigDecimal.ZERO) == 0){
+            throw new BusinessException("Valor informado não pode ser zero");
+        }
         this.valorTotal = valorTotal;
     }
     public BigDecimal getValorTotal() {
@@ -45,4 +59,5 @@ public class ItemEntity {
     public Long getQuantidade() {
         return quantidade;
     }
+    
 }

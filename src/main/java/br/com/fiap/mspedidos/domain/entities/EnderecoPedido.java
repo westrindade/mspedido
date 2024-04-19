@@ -1,5 +1,6 @@
 package br.com.fiap.mspedidos.domain.entities;
 
+import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
 import jakarta.persistence.*;
 
 @Embeddable
@@ -20,7 +21,24 @@ public class EnderecoPedido {
     private String estado;
 
     public EnderecoPedido(){}
-    public EnderecoPedido(String cep, String logradouro, String numero, String complemento, String bairro, String cidade, String estado) {
+    public EnderecoPedido(String cep, String logradouro, String numero, String complemento, String bairro, String cidade, String estado) throws BusinessException {
+
+        if (cep.isEmpty()){
+            throw new BusinessException("Cep não informado");
+        }
+
+        if (logradouro.isEmpty()){
+            throw new BusinessException("Logradouro não informado");
+        }
+
+        if (bairro.isEmpty()){
+            throw new BusinessException("Bairro não informado");
+        }
+
+        if (numero.isEmpty()){
+            throw new BusinessException("Número não informado");
+        }
+
         this.cep = cep;
         this.logradouro = logradouro;
         this.numero = numero;

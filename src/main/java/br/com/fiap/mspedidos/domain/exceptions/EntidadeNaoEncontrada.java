@@ -1,4 +1,4 @@
-package br.com.fiap.mspedidos.domain.excections;
+package br.com.fiap.mspedidos.domain.exceptions;
 
 public class EntidadeNaoEncontrada extends BusinessException {
 

@@ -1,8 +1,8 @@
 package br.com.fiap.mspedidos.infra;
 
 import br.com.fiap.mspedidos.domain.controllers.GerarResponse;
-import br.com.fiap.mspedidos.domain.excections.BusinessException;
-import br.com.fiap.mspedidos.domain.excections.EntidadeNaoEncontrada;
+import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
+import br.com.fiap.mspedidos.domain.exceptions.EntidadeNaoEncontrada;
 import br.com.fiap.mspedidos.infra.handler.MessageErrorHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

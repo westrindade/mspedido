@@ -2,13 +2,9 @@ package br.com.fiap.mspedidos.domain.controllers;
 
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoRequest;
 import br.com.fiap.mspedidos.domain.entities.StatusPedidoEnum;
-import br.com.fiap.mspedidos.domain.excections.BusinessException;
 import br.com.fiap.mspedidos.domain.service.PedidoService;
-import br.com.fiap.mspedidos.infra.handler.MessageErrorHandler;
 import br.com.fiap.mspedidos.infra.swagger.annotations.ApiResponseSwaggerCreate;
-import br.com.fiap.mspedidos.infra.swagger.annotations.ApiResponseSwaggerNoContent;
 import br.com.fiap.mspedidos.infra.swagger.annotations.ApiResponseSwaggerOk;
-import br.com.fiap.mspedidos.infra.swagger.annotations.responses.ApiResponseNotFoundJson;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

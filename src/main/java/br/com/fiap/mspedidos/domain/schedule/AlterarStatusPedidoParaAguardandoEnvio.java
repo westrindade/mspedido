@@ -3,7 +3,7 @@ package br.com.fiap.mspedidos.domain.schedule;
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoResponse;
 import br.com.fiap.mspedidos.domain.entities.PedidoEntity;
 import br.com.fiap.mspedidos.domain.entities.StatusPedidoEnum;
-import br.com.fiap.mspedidos.domain.excections.BusinessException;
+import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
 import br.com.fiap.mspedidos.domain.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

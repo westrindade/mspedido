@@ -1,11 +1,8 @@
 package br.com.fiap.mspedidos.domain.entities;
 
-import jakarta.validation.constraints.NotNull;
-
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoResponse;
-import br.com.fiap.mspedidos.domain.excections.BusinessException;
+import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -39,7 +36,6 @@ public class PedidoEntity {
     private LocalDateTime dataEnvio;
     @Column(name = "dt_cancelamento")
     private LocalDateTime dataCancelamento;
-    @NotNull @Size(min = 1)
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Builder.Default
     private List<ItemEntity> itens;
@@ -51,7 +47,25 @@ public class PedidoEntity {
         this.id = id;
         this.statusPedido = status;
     }
-        public PedidoEntity(Long idCliente, FormaPagamentoEnum formaPagamento, int quantidadeParcelas, List<ItemEntity> itens, EnderecoPedido endereco) {
+    public PedidoEntity(Long idCliente, FormaPagamentoEnum formaPagamento, int quantidadeParcelas, List<ItemEntity> itens, EnderecoPedido endereco)
+            throws BusinessException {
+
+        if (idCliente == 0){
+            throw new BusinessException("Cliente não informado");
+        }
+
+        if (endereco == null){
+            throw new BusinessException("Endereço do pedido não informado");
+        }
+
+        if (itens == null || itens.size() == 0){
+            throw new BusinessException("Itens do pedido não informado");
+        }
+
+        if (quantidadeParcelas == 0){
+            throw new BusinessException("Quantidade de Parcelas do Pedido não informada");
+        }
+
         this.idCliente = idCliente;
         this.formaPagamento = formaPagamento;
         this.quantidadeParcelas = quantidadeParcelas;
@@ -61,12 +75,10 @@ public class PedidoEntity {
         this.dataCriacao = LocalDateTime.now();
         this.statusPagamento = StatusPagamentoEnum.AGUARDANDO_PAGAMENTO;
         this.statusPedido = StatusPedidoEnum.PREPARANDO;
+        this.valorTotal = BigDecimal.ZERO;
     }
 
-    public void confirmarPagamento() throws BusinessException {
-        if (this.statusPagamento != StatusPagamentoEnum.AGUARDANDO_PAGAMENTO){
-            throw new BusinessException("Pagamento não pode ser confirmado");
-        }
+    public void confirmarPagamento() {
         this.statusPagamento = StatusPagamentoEnum.PAGAMENTO_CONFIRMADO;
         this.dataPagamento = LocalDateTime.now();
     }
@@ -91,8 +103,9 @@ public class PedidoEntity {
     public void aguardarEnvioPedido() throws BusinessException {
         if (this.statusPedido == StatusPedidoEnum.PREPARANDO) {
             this.statusPedido = StatusPedidoEnum.AGUARDANDO_ENVIO;
+        } else {
+            throw new BusinessException("Pedido não pode ser direcionado para aguardando envio");
         }
-        throw new BusinessException("Pedido não pode ser direcionado para aguardando envio");
     }
 
     public PedidoDtoResponse toDto() {
@@ -112,16 +125,17 @@ public class PedidoEntity {
         return itens;
     }
 
-    public void somarValorTotal(BigDecimal valorTotal) {
-        if (this.valorTotal == null)
-            this.valorTotal = new BigDecimal(0);
+    public void somarValorTotal(BigDecimal valorTotal) throws BusinessException {
+        if (valorTotal.compareTo(BigDecimal.ZERO) == 0){
+            throw new BusinessException("Valor informado não pode ser zero");
+        }
         this.valorTotal = this.valorTotal.add(valorTotal);
     }
 
     @PrePersist
-    public void prePersist() {
+    public void prePersist() throws BusinessException {
         for (ItemEntity item : itens) {
-            item.setPedido(this);
+            item.informarPedido(this);
         }
     }
 }

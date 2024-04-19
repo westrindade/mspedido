@@ -5,9 +5,10 @@ import br.com.fiap.mspedidos.domain.adapter.ProdutoPedidoProducer;
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoRequest;
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoResponse;
 import br.com.fiap.mspedidos.domain.dto.ProdutoDtoResponse;
+import br.com.fiap.mspedidos.domain.entities.ItemEntity;
 import br.com.fiap.mspedidos.domain.entities.StatusPedidoEnum;
 import br.com.fiap.mspedidos.domain.entities.PedidoEntity;
-import br.com.fiap.mspedidos.domain.excections.BusinessException;
+import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
 import br.com.fiap.mspedidos.domain.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,13 @@ import java.util.List;
 public class PedidoService {
 
     @Autowired
-    private PedidoRepository pedidoRepository;
+    private final PedidoRepository pedidoRepository;
 
     private final EstoquePedidoProducer estoquePedidoProducer;
     private final ProdutoPedidoProducer produtoPedidoProducer;
 
-    public PedidoService(EstoquePedidoProducer estoquePedidoProducer, ProdutoPedidoProducer produtoPedidoProducer){
+    public PedidoService(PedidoRepository pedidoRepository, EstoquePedidoProducer estoquePedidoProducer, ProdutoPedidoProducer produtoPedidoProducer){
+        this.pedidoRepository = pedidoRepository;
         this.estoquePedidoProducer = estoquePedidoProducer;
         this.produtoPedidoProducer = produtoPedidoProducer;
     }
@@ -83,26 +85,32 @@ public class PedidoService {
 
     public void cancelarPedido(Long id) throws BusinessException {
         PedidoEntity pedido = buscarPedidoEntity(id);
-        this.devolverAoEstoqueProduto(pedido);
         pedido.cancelarPedido();
+        this.devolverAoEstoqueProduto(pedido);
         pedidoRepository.save(pedido);
     }
-    private void calcularValorPedido(PedidoEntity pedido){
-        pedido.getItens().forEach(item -> {
+    private void calcularValorPedido(PedidoEntity pedido) throws BusinessException {
+        for (ItemEntity item : pedido.getItens()) {
             ProdutoDtoResponse produtoDtoResponse = this.produtoPedidoProducer.obterProduto(item.getIdProduto());
+            if (produtoDtoResponse == null) {
+                throw new BusinessException("Produto " + item.getIdProduto() + " não encontrado");
+            }
+            if (produtoDtoResponse.preco() == 0) {
+                throw new BusinessException("Produto " + item.getIdProduto() + " não possue valor cadastrao");
+            }
             item.setValorTotal(this.calcularValorItem(item.getQuantidade(),produtoDtoResponse.preco()));
             pedido.somarValorTotal(item.getValorTotal());
-        });
+        }
     }
-    private BigDecimal calcularValorItem(Long quantidade, double valorUnitario){
+    private BigDecimal calcularValorItem(Long quantidade, double valorUnitario) {
         return BigDecimal.valueOf( quantidade * valorUnitario);
     }
-    private void removerEstoqueProduto(PedidoEntity pedido){
+    private void removerEstoqueProduto(PedidoEntity pedido) {
         pedido.getItens().forEach(item -> {
             this.estoquePedidoProducer.removerEstoque(item.getIdProduto(),item.getQuantidade());
         });
     }
-    private void devolverAoEstoqueProduto(PedidoEntity pedido){
+    private void devolverAoEstoqueProduto(PedidoEntity pedido) {
         pedido.getItens().forEach(item -> {
             this.estoquePedidoProducer.devolverAoEstoque(item.getIdProduto(),item.getQuantidade());
         });
