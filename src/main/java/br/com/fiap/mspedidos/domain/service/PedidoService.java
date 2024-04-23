@@ -65,21 +65,21 @@ public class PedidoService {
         return pedidoRetorno.toDto();
     }
 
-    public void confirmarPagamento(Long id) throws BusinessException {
+    public void pagar(Long id) throws BusinessException {
         PedidoEntity pedido = buscarPedidoEntity(id);
-        pedido.confirmarPagamento();
+        pedido.pagarPedido();
         pedidoRepository.save(pedido);
     }
 
-    public void alterarStatusPedidoParaAguardarEnvio(Long id) throws BusinessException {
+    public void alterarStatusPedidoParaAguardarEntrega(Long id) throws BusinessException {
         PedidoEntity pedido = buscarPedidoEntity(id);
-        pedido.aguardarEnvioPedido();
+        pedido.aguardarEntrega();
         pedidoRepository.save(pedido);
     }
 
-    public void enviarPedido(Long id) throws BusinessException {
+    public void entregarPedido(Long id) throws BusinessException {
         PedidoEntity pedido = buscarPedidoEntity(id);
-        pedido.enviarPedido();
+        pedido.entregarPedido();
         pedidoRepository.save(pedido);
     }
 

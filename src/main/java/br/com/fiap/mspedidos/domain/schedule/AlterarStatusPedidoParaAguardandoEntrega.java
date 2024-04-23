@@ -13,7 +13,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AlterarStatusPedidoParaAguardandoEnvio {
+public class AlterarStatusPedidoParaAguardandoEntrega {
 
     @Autowired
     PedidoService pedidoService;
@@ -23,10 +23,10 @@ public class AlterarStatusPedidoParaAguardandoEnvio {
     @Scheduled(fixedRate = SEGUNDOS)
     public void iniciar() {
 
-        System.out.println("Iniciando AlterarStatusPedidoParaAguardandoEnvio [" + LocalDateTime.now() + "]");
+        System.out.println("Iniciando AlterarStatusPedidoParaAguardandoEntrega [" + LocalDateTime.now() + "]");
 
         try {
-            List<PedidoDtoResponse> pedidoDtoResponseList = pedidoService.listarPedidosPorStatus(StatusPedidoEnum.PREPARANDO);
+            List<PedidoDtoResponse> pedidoDtoResponseList = pedidoService.listarPedidosPorStatus(StatusPedidoEnum.PAGO);
             pedidoDtoResponseList.parallelStream().forEach(this::executar);
         } catch ( BusinessException  ex) {
             System.err.println("iniciar - Erro [ " + ex.getMessage() + "]");
@@ -36,8 +36,8 @@ public class AlterarStatusPedidoParaAguardandoEnvio {
     private void executar(PedidoDtoResponse pedidoDtoResponse) {
         PedidoEntity pedido = new PedidoEntity(pedidoDtoResponse.id(),pedidoDtoResponse.statusPedido());
         try {
-            pedido.aguardarEnvioPedido();
-            pedidoService.alterarStatusPedidoParaAguardarEnvio(pedido.getId());
+            pedido.aguardarEntrega();
+            pedidoService.alterarStatusPedidoParaAguardarEntrega(pedido.getId());
         } catch ( BusinessException  ex) {
             System.err.println("executar - Erro [ " + ex.getMessage() + "]");
         }

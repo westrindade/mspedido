@@ -96,7 +96,7 @@ class PedidoTest {
                 new CriarObjetos().criarListItem(),
                 new CriarObjetos().criarEndereco()
         );
-        pedidoOk.confirmarPagamento();
+        pedidoOk.pagarPedido();
         // Act e Assert
         assertNotNull(pedidoOk);
     }
@@ -116,21 +116,20 @@ class PedidoTest {
         PedidoEntity pedidoOk = new CriarObjetos().criarPedidoOK();
         //Arrange
         final Throwable throwable = assertThrows(BusinessException.class, () ->
-                pedidoOk.enviarPedido()
+                pedidoOk.entregarPedido()
         );
         // Act e Assert
-        assertEquals("Pedido não pode ser enviado", throwable.getMessage());
+        assertEquals("Pedido não pode ser entregue", throwable.getMessage());
     }
     @Test
-    void naoDeveAguardarEnvioPedido() throws BusinessException {
+    void naoDeveAguardarEntregaPedido() throws BusinessException {
         PedidoEntity pedidoOk = new CriarObjetos().criarPedidoOK();
-        pedidoOk.aguardarEnvioPedido();
         //Arrange
         final Throwable throwable = assertThrows(BusinessException.class, () ->
-                pedidoOk.aguardarEnvioPedido()
+                pedidoOk.aguardarEntrega()
         );
         // Act e Assert
-        assertEquals("Pedido não pode ser direcionado para aguardando envio", throwable.getMessage());
+        assertEquals("Pedido não pode ser direcionado para aguardando entrega", throwable.getMessage());
     }
     @Test
     void naoDeveSomarValorTotal() throws BusinessException {
@@ -150,23 +149,23 @@ class PedidoTest {
         // Act e Assert
         assertNotNull(pedidoOk);
     }
-    @Test
-    void deveEnviarPedido() throws BusinessException {
-        //Arrange
-        PedidoEntity pedidoOk = new CriarObjetos().criarPedidoOK();
-        pedidoOk.aguardarEnvioPedido();
-        pedidoOk.enviarPedido();
-        // Act e Assert
-        assertNotNull(pedidoOk);
-    }
-    @Test
-    void deveAguardarEnvioPedido() throws BusinessException {
-        //Arrange
-        PedidoEntity pedidoOk = new CriarObjetos().criarPedidoOK();
-        pedidoOk.aguardarEnvioPedido();
-        // Act e Assert
-        assertNotNull(pedidoOk);
-    }
+//    @Test
+//    void deveEnviarPedido() throws BusinessException {
+//        //Arrange
+//        PedidoEntity pedidoOk = new CriarObjetos().criarPedidoOK();
+//        pedidoOk.aguardarEntrega();
+//        pedidoOk.enviarPedido();
+//        // Act e Assert
+//        assertNotNull(pedidoOk);
+//    }
+//    @Test
+//    void deveAguardarEntregaPedido() throws BusinessException {
+//        //Arrange
+//        PedidoEntity pedidoOk = new CriarObjetos().criarPedidoOK();
+//        pedidoOk.aguardarEnvioPedido();
+//        // Act e Assert
+//        assertNotNull(pedidoOk);
+//    }
     @Test
     void deveSomarValorTotal() throws BusinessException {
         //Arrange

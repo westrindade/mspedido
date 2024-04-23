@@ -44,7 +44,7 @@ class ItensTest {
     void deveCriarItem() throws BusinessException {
         //Arrange
         ItemEntity itemOK = new ItemEntity(1L,1L);
-        itemOK.informarPedido(new PedidoEntity(1L, StatusPedidoEnum.PREPARANDO));
+        itemOK.informarPedido(new PedidoEntity(1L,StatusPedidoEnum.AGUARDANDO_PAGAMENTO));
         // Act e Assert
         assertNotNull(itemOK);
     }

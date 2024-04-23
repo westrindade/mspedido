@@ -26,14 +26,12 @@ public class PedidoEntity {
     private FormaPagamentoEnum formaPagamento;
     @Column(name = "nu_quantidade_parcelas")
     private int quantidadeParcelas;
-    @Column(name = "ds_status_pagamento")
-    private StatusPagamentoEnum statusPagamento;
     @Column(name = "ds_status_pedido")
     private StatusPedidoEnum statusPedido;
     @Column(name = "dt_pagamento")
     private LocalDateTime dataPagamento;
-    @Column(name = "dt_envio")
-    private LocalDateTime dataEnvio;
+    @Column(name = "dt_entrega")
+    private LocalDateTime dataEntrega;
     @Column(name = "dt_cancelamento")
     private LocalDateTime dataCancelamento;
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -73,13 +71,12 @@ public class PedidoEntity {
         this.endereco = endereco;
 
         this.dataCriacao = LocalDateTime.now();
-        this.statusPagamento = StatusPagamentoEnum.AGUARDANDO_PAGAMENTO;
-        this.statusPedido = StatusPedidoEnum.PREPARANDO;
+        this.statusPedido = StatusPedidoEnum.AGUARDANDO_PAGAMENTO;
         this.valorTotal = BigDecimal.ZERO;
     }
 
-    public void confirmarPagamento() {
-        this.statusPagamento = StatusPagamentoEnum.PAGAMENTO_CONFIRMADO;
+    public void pagarPedido() {
+        this.statusPedido = StatusPedidoEnum.PAGO;
         this.dataPagamento = LocalDateTime.now();
     }
 
@@ -91,20 +88,20 @@ public class PedidoEntity {
         this.dataCancelamento = LocalDateTime.now();
     }
 
-    public void enviarPedido() throws BusinessException {
-        if (this.statusPedido == StatusPedidoEnum.AGUARDANDO_ENVIO) {
-            this.statusPedido = StatusPedidoEnum.ENVIADO;
-            this.dataEnvio = LocalDateTime.now();
+    public void entregarPedido() throws BusinessException {
+        if (this.statusPedido == StatusPedidoEnum.AGUARDANDO_ENTREGA) {
+            this.statusPedido = StatusPedidoEnum.ENTREGUE;
+            this.dataEntrega = LocalDateTime.now();
         } else {
-            throw new BusinessException("Pedido não pode ser enviado");
+            throw new BusinessException("Pedido não pode ser entregue");
         }
     }
 
-    public void aguardarEnvioPedido() throws BusinessException {
-        if (this.statusPedido == StatusPedidoEnum.PREPARANDO) {
-            this.statusPedido = StatusPedidoEnum.AGUARDANDO_ENVIO;
+    public void aguardarEntrega() throws BusinessException {
+        if (this.statusPedido == StatusPedidoEnum.PAGO) {
+            this.statusPedido = StatusPedidoEnum.AGUARDANDO_ENTREGA;
         } else {
-            throw new BusinessException("Pedido não pode ser direcionado para aguardando envio");
+            throw new BusinessException("Pedido não pode ser direcionado para aguardando entrega");
         }
     }
 
@@ -113,7 +110,6 @@ public class PedidoEntity {
                 this.id,
                 this.idCliente,
                 this.statusPedido,
-                this.statusPagamento,
                 this.dataCriacao
         );
     }

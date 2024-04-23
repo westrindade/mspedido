@@ -11,9 +11,9 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("APIs do Microserviço de Produtos")
+                        .title("APIs do Microserviço de Pedidos")
                         .version("v1")
-                        .description("APIs do Microserviço de Produtos criada exclusivamente para o TechChallenge 4 da FIAP.")
+                        .description("APIs do Microserviço de Pedidos criada exclusivamente para o TechChallenge 4 da FIAP.")
                 );
     }
 }

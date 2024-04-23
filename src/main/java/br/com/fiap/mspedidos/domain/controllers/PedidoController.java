@@ -72,12 +72,5 @@ public class PedidoController {
                     return "Pagamento Cancelado";
                 });
     }
-
-    @GetMapping("/status")
-    @Operation(summary = "Devolve lista de Status do Pedido Disponiveis")
-    @ApiResponseSwaggerOk
-    public ResponseEntity<?> getStatusPedido(){
-        return ResponseEntity.status(HttpStatus.OK).body(StatusPedidoEnum.values());
-    }
 }
 

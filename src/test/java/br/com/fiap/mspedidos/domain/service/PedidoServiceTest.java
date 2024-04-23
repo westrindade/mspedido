@@ -62,7 +62,7 @@ class PedidoServiceTest {
         PedidoEntity pedido = new CriarObjetosEntity().criarPedido();
         when(repository.findByStatusPedido(any(StatusPedidoEnum.class))).thenReturn(Arrays.asList(pedido,pedido));
         // Act
-        final List<PedidoDtoResponse> pedidos = service.listarPedidosPorStatus(StatusPedidoEnum.PREPARANDO);
+        final List<PedidoDtoResponse> pedidos = service.listarPedidosPorStatus(StatusPedidoEnum.AGUARDANDO_PAGAMENTO);
         // Assert
         assertNotNull(pedidos);
         assertThatCollection(pedidos)
@@ -131,10 +131,10 @@ class PedidoServiceTest {
         when(repository.findById(anyLong())).thenReturn(Optional.of(pedido));
         when(repository.save(any(PedidoEntity.class))).thenReturn(pedido);
         // Act
-        service.confirmarPagamento(pedido.getId());
+        service.pagar(pedido.getId());
         final PedidoDtoResponse pedidoDtoResponse = service.buscarPedidoPorId(pedido.getId());
         // Assert
-        assertEquals(pedidoDtoResponse.statusPagamento(), StatusPagamentoEnum.PAGAMENTO_CONFIRMADO);
+        assertEquals(pedidoDtoResponse.statusPedido(), StatusPedidoEnum.PAGO);
         verify(repository, times(2)).findById(anyLong());
         verify(repository, times(1)).save(any(PedidoEntity.class));
     }
@@ -143,84 +143,84 @@ class PedidoServiceTest {
         //Arrange
         PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComId();
         // Act
-        final Throwable throwable = assertThrows(BusinessException.class, () -> service.confirmarPagamento(anyLong()));
+        final Throwable throwable = assertThrows(BusinessException.class, () -> service.pagar(anyLong()));
         // Assert
         assertEquals("Pedido não encontrado", throwable.getMessage());
         verify(repository, times(1)).findById(anyLong());
     }
     @Test
-    void deveAlterarStatusPedidoParaAguardarEnvio() throws BusinessException {
+    void deveAlterarStatusPedidoParaAguardarEntrega() throws BusinessException {
         //Arrange
-        PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComId();
+        PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComIdComStatusPago();
 
         when(repository.findById(anyLong())).thenReturn(Optional.of(pedido));
         when(repository.save(any(PedidoEntity.class))).thenReturn(pedido);
         // Act
-        service.alterarStatusPedidoParaAguardarEnvio(pedido.getId());
+        service.alterarStatusPedidoParaAguardarEntrega(pedido.getId());
         final PedidoDtoResponse pedidoDtoResponse = service.buscarPedidoPorId(pedido.getId());
         // Assert
-        assertEquals(pedidoDtoResponse.statusPedido(), StatusPedidoEnum.AGUARDANDO_ENVIO);
+        assertEquals(pedidoDtoResponse.statusPedido(), StatusPedidoEnum.AGUARDANDO_ENTREGA);
         verify(repository, times(2)).findById(anyLong());
         verify(repository, times(1)).save(any(PedidoEntity.class));
     }
     @Test
-    void naoDeveAlterarStatusPedidoParaAguardarEnvio() throws BusinessException {
+    void naoDeveAlterarStatusPedidoParaAguardarEntrega() throws BusinessException {
         //Arrange
         PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComId();
         // Act
-        final Throwable throwable = assertThrows(BusinessException.class, () -> service.alterarStatusPedidoParaAguardarEnvio(anyLong()));
+        final Throwable throwable = assertThrows(BusinessException.class, () -> service.alterarStatusPedidoParaAguardarEntrega(anyLong()));
         // Assert
         assertEquals("Pedido não encontrado", throwable.getMessage());
         verify(repository, times(1)).findById(anyLong());
     }
     @Test
-    void naoDeveAlterarStatusPedidoParaAguardarEnvioPorStatusEtapaDivergente() throws BusinessException {
+    void naoDeveAlterarStatusPedidoParaAguardarEntregaPorStatusEtapaDivergente() throws BusinessException {
         //Arrange
-        PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComIdComStatusEnviado();
+        PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComIdComStatusEntregue();
 
         when(repository.findById(anyLong())).thenReturn(Optional.of(pedido));
         when(repository.save(any(PedidoEntity.class))).thenReturn(pedido);
         // Act
-        final Throwable throwable = assertThrows(BusinessException.class, () -> service.alterarStatusPedidoParaAguardarEnvio(anyLong()));
+        final Throwable throwable = assertThrows(BusinessException.class, () -> service.alterarStatusPedidoParaAguardarEntrega(anyLong()));
         // Assert
-        assertEquals("Pedido não pode ser direcionado para aguardando envio", throwable.getMessage());
+        assertEquals("Pedido não pode ser direcionado para aguardando entrega", throwable.getMessage());
         verify(repository, times(1)).findById(anyLong());
     }
     @Test
-    void deveEnviarPedido() throws BusinessException {
+    void deveEntregarPedido() throws BusinessException {
         //Arrange
-        PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComId();
+        PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComIdComStatusPago();
 
         when(repository.findById(anyLong())).thenReturn(Optional.of(pedido));
         when(repository.save(any(PedidoEntity.class))).thenReturn(pedido);
         // Act
-        service.alterarStatusPedidoParaAguardarEnvio(pedido.getId());
-        service.enviarPedido(pedido.getId());
+        service.alterarStatusPedidoParaAguardarEntrega(pedido.getId());
+        service.entregarPedido(pedido.getId());
         final PedidoDtoResponse pedidoDtoResponse = service.buscarPedidoPorId(pedido.getId());
         // Assert
-        assertEquals(pedidoDtoResponse.statusPedido(), StatusPedidoEnum.ENVIADO);
+        assertEquals(pedidoDtoResponse.statusPedido(), StatusPedidoEnum.ENTREGUE);
         verify(repository, times(3)).findById(anyLong());
         verify(repository, times(2)).save(any(PedidoEntity.class));
     }
     @Test
-    void naoDeveEnviarPedidoPorStatusEtapaDivergente() throws BusinessException {
+    void naoDeveEntregarPedidoPorStatusEtapaDivergente() throws BusinessException {
         //Arrange
         PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComId();
 
         when(repository.findById(anyLong())).thenReturn(Optional.of(pedido));
         when(repository.save(any(PedidoEntity.class))).thenReturn(pedido);
         // Act
-        final Throwable throwable = assertThrows(BusinessException.class, () -> service.enviarPedido(anyLong()));
+        final Throwable throwable = assertThrows(BusinessException.class, () -> service.entregarPedido(anyLong()));
         // Assert
-        assertEquals("Pedido não pode ser enviado", throwable.getMessage());
+        assertEquals("Pedido não pode ser entregue", throwable.getMessage());
         verify(repository, times(1)).findById(anyLong());
     }
     @Test
-    void naoDeveEnviarPedido() throws BusinessException {
+    void naoDeveEntregarPedido() throws BusinessException {
         //Arrange
         PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComId();
         // Act
-        final Throwable throwable = assertThrows(BusinessException.class, () -> service.enviarPedido(anyLong()));
+        final Throwable throwable = assertThrows(BusinessException.class, () -> service.entregarPedido(anyLong()));
         // Assert
         assertEquals("Pedido não encontrado", throwable.getMessage());
         verify(repository, times(1)).findById(anyLong());
@@ -271,7 +271,7 @@ class PedidoServiceTest {
     class CriarObjetosEntity {
         private ItemEntity criarItem() throws BusinessException {
             ItemEntity item = new ItemEntity(1L,1L);
-            item.informarPedido(new PedidoEntity(1L, StatusPedidoEnum.PREPARANDO));
+            item.informarPedido(new PedidoEntity(1L,StatusPedidoEnum.AGUARDANDO_PAGAMENTO));
             return item;
         }
         private List<ItemEntity> criarListItem() throws BusinessException {
@@ -292,12 +292,17 @@ class PedidoServiceTest {
         }
         private PedidoEntity criarPedidoComId() throws BusinessException {
             return new PedidoEntity(1L,
-                    StatusPedidoEnum.PREPARANDO
+                    StatusPedidoEnum.AGUARDANDO_PAGAMENTO
             );
         }
-        private PedidoEntity criarPedidoComIdComStatusEnviado() throws BusinessException {
+        private PedidoEntity criarPedidoComIdComStatusPago() throws BusinessException {
             return new PedidoEntity(1L,
-                    StatusPedidoEnum.ENVIADO
+                    StatusPedidoEnum.PAGO
+            );
+        }
+        private PedidoEntity criarPedidoComIdComStatusEntregue() throws BusinessException {
+            return new PedidoEntity(1L,
+                    StatusPedidoEnum.ENTREGUE
             );
         }
         private PedidoEntity criarPedidoComIdComStatusCancelado() throws BusinessException {
