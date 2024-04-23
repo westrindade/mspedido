@@ -20,7 +20,7 @@ public class PedidoController {
     private PedidoService pedidoService;
 
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar produto por ID")
+    @Operation(summary = "Buscar pedido por ID")
     @ApiResponseSwaggerOk
     public ResponseEntity<?> buscarPedidoPorId(@PathVariable Long id) {
         return Utils.response(HttpStatus.OK,
@@ -29,7 +29,7 @@ public class PedidoController {
     }
 
     @GetMapping("/cliente/{id}")
-    @Operation(summary = "Buscar produto por ID de cliente")
+    @Operation(summary = "Buscar pedido por ID de cliente")
     @ApiResponseSwaggerOk
     public ResponseEntity<?> listarPedidosPorCliente(@PathVariable Long id) {
         return Utils.response(HttpStatus.OK,
@@ -37,7 +37,7 @@ public class PedidoController {
         );
     }
     @GetMapping("/status/{status}")
-    @Operation(summary = "Buscar produto por status")
+    @Operation(summary = "Buscar pedido por status")
     @ApiResponseSwaggerOk
     public ResponseEntity<?> listarPedidosPorStatus(@PathVariable StatusPedidoEnum status) {
         return Utils.response(HttpStatus.OK,
@@ -58,7 +58,7 @@ public class PedidoController {
     public ResponseEntity<?> confirmarPagamento(@PathVariable Long id){
         return Utils.response(HttpStatus.OK,
                 () -> {
-                    pedidoService.confirmarPagamento(id);
+                    pedidoService.pagar(id);
                     return "Pagamento Confirmado";
                 });
     }
@@ -70,6 +70,17 @@ public class PedidoController {
                 () -> {
                     pedidoService.cancelarPedido(id);
                     return "Pagamento Cancelado";
+                });
+    }
+
+    @PutMapping("/{id}/confirmar-entrega")
+    @Operation(summary = "Confirmar entrega pedido")
+    @ApiResponseSwaggerOk
+    public ResponseEntity<?> entregarPedido(@PathVariable Long id){
+        return Utils.response(HttpStatus.OK,
+                () -> {
+                    pedidoService.entregarPedido(id);
+                    return "Pedido Entregue";
                 });
     }
 }

@@ -1,5 +1,5 @@
 package br.com.fiap.mspedidos.domain.entities;
 
 public enum StatusPedidoEnum {
-    PREPARANDO, AGUARDANDO_ENVIO, ENVIADO, CANCELADO
+    AGUARDANDO_PAGAMENTO, PAGO, AGUARDANDO_ENTREGA, ENTREGUE, CANCELADO
 }
