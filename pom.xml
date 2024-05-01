@@ -73,6 +73,11 @@
 			<groupId>org.springframework.integration</groupId>
 			<artifactId>spring-integration-http</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>spring-mock-mvc</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>

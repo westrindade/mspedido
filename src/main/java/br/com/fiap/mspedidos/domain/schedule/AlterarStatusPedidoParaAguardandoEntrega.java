@@ -1,6 +1,8 @@
 package br.com.fiap.mspedidos.domain.schedule;
 
+import br.com.fiap.mspedidos.domain.adapter.LogisticaPedidoProducer;
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoResponse;
+import br.com.fiap.mspedidos.domain.dto.PedidoLogisticaDtoRequest;
 import br.com.fiap.mspedidos.domain.entities.PedidoEntity;
 import br.com.fiap.mspedidos.domain.entities.StatusPedidoEnum;
 import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
@@ -15,8 +17,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AlterarStatusPedidoParaAguardandoEntrega {
 
-    @Autowired
-    PedidoService pedidoService;
+    private final PedidoService pedidoService;
+
+    private final LogisticaPedidoProducer logisticaPedidoProducer;
+
+    public AlterarStatusPedidoParaAguardandoEntrega(PedidoService pedidoService, LogisticaPedidoProducer logisticaPedidoProducer) {
+        this.pedidoService = pedidoService;
+        this.logisticaPedidoProducer = logisticaPedidoProducer;
+    }
 
     private final long SEGUNDOS = 1000;
 
@@ -26,20 +34,25 @@ public class AlterarStatusPedidoParaAguardandoEntrega {
         System.out.println("Iniciando AlterarStatusPedidoParaAguardandoEntrega [" + LocalDateTime.now() + "]");
 
         try {
-            List<PedidoDtoResponse> pedidoDtoResponseList = pedidoService.listarPedidosPorStatus(StatusPedidoEnum.PAGO);
-            pedidoDtoResponseList.parallelStream().forEach(this::executar);
+            List<PedidoLogisticaDtoRequest> pedidoList = pedidoService.listarPedidosPorStatusSchedule(StatusPedidoEnum.PAGO);
+            pedidoList.parallelStream().forEach(this::executar);
         } catch ( BusinessException  ex) {
             System.err.println("iniciar - Erro [ " + ex.getMessage() + "]");
         }
     }
 
-    private void executar(PedidoDtoResponse pedidoDtoResponse) {
-        PedidoEntity pedido = new PedidoEntity(pedidoDtoResponse.id(),pedidoDtoResponse.statusPedido());
+    private void executar(PedidoLogisticaDtoRequest pedido) {
         try {
-            pedido.aguardarEntrega();
-            pedidoService.alterarStatusPedidoParaAguardarEntrega(pedido.getId());
+            this.enviarLogistica(pedido);
+            pedidoService.alterarStatusPedidoParaAguardarEntrega(pedido.codigoPedido());
         } catch ( BusinessException  ex) {
             System.err.println("executar - Erro [ " + ex.getMessage() + "]");
         }
     }
+
+    private void enviarLogistica(PedidoLogisticaDtoRequest pedido) {
+        this.logisticaPedidoProducer.enviarLogistica(pedido);
+    }
+
+
 }

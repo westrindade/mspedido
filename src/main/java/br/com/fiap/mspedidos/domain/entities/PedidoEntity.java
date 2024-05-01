@@ -1,12 +1,16 @@
 package br.com.fiap.mspedidos.domain.entities;
 
+import br.com.fiap.mspedidos.domain.dto.ItemPedidoDtoResponse;
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoResponse;
+import br.com.fiap.mspedidos.domain.dto.PedidoLogisticaDtoRequest;
+import br.com.fiap.mspedidos.domain.dto.ProdutoLogisticaDtoRequest;
 import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
 import jakarta.persistence.*;
 import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "tb_pedidos")
@@ -110,9 +114,42 @@ public class PedidoEntity {
                 this.id,
                 this.idCliente,
                 this.statusPedido,
-                this.dataCriacao
+                this.dataCriacao,
+                this.toListDto()
         );
     }
+
+    private List<ItemPedidoDtoResponse> toListDto(){
+        List<ItemPedidoDtoResponse> itens = new ArrayList<>();
+        if (this.itens != null && this.itens.size() > 0) {
+            this.itens.forEach(item -> {
+                itens.add(new ItemPedidoDtoResponse(item.getIdProduto(), item.getQuantidade()));
+            });
+        }
+        return itens;
+    }
+
+    public PedidoLogisticaDtoRequest toDtoLogistica() {
+        return new PedidoLogisticaDtoRequest(
+                this.id,
+                this.idCliente,
+                this.dataCriacao,
+                this.statusPedido,
+                this.endereco.getCep(),
+                this.endereco.getNumero(),
+                this.endereco.getComplemento(),
+                this.toListDtoProdutoLogistica()
+        );
+    }
+
+    private List<ProdutoLogisticaDtoRequest> toListDtoProdutoLogistica(){
+        List<ProdutoLogisticaDtoRequest> produtos = new ArrayList<>();
+        this.itens.forEach(item -> {
+            produtos.add(new ProdutoLogisticaDtoRequest(item.getIdProduto(), item.getQuantidade()));
+        });
+        return produtos;
+    }
+
     public Long getId() {
         return id;
     }

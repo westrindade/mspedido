@@ -4,6 +4,7 @@ import br.com.fiap.mspedidos.domain.adapter.EstoquePedidoProducer;
 import br.com.fiap.mspedidos.domain.adapter.ProdutoPedidoProducer;
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoRequest;
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoResponse;
+import br.com.fiap.mspedidos.domain.dto.PedidoLogisticaDtoRequest;
 import br.com.fiap.mspedidos.domain.dto.ProdutoDtoResponse;
 import br.com.fiap.mspedidos.domain.entities.ItemEntity;
 import br.com.fiap.mspedidos.domain.entities.StatusPedidoEnum;
@@ -44,6 +45,10 @@ public class PedidoService {
 
     public List<PedidoDtoResponse> listarPedidosPorStatus(StatusPedidoEnum statusPedido) throws BusinessException {
         return pedidoRepository.findByStatusPedido(statusPedido).stream().map(PedidoEntity::toDto).toList();
+    }
+
+    public List<PedidoLogisticaDtoRequest> listarPedidosPorStatusSchedule(StatusPedidoEnum statusPedido) throws BusinessException {
+        return pedidoRepository.findByStatusPedido(statusPedido).stream().map(PedidoEntity::toDtoLogistica).toList();
     }
 
     public PedidoDtoResponse buscarPedidoPorId(Long id) throws BusinessException {

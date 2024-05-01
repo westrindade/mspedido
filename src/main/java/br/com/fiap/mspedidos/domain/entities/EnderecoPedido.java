@@ -47,4 +47,16 @@ public class EnderecoPedido {
         this.cidade = cidade;
         this.estado = estado;
     }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public String getComplemento() {
+        return complemento;
+    }
 }
