@@ -1,11 +1,9 @@
 package br.com.fiap.mspedidos.domain.service;
 
+import br.com.fiap.mspedidos.domain.adapter.ClientePedidoProducer;
 import br.com.fiap.mspedidos.domain.adapter.EstoquePedidoProducer;
 import br.com.fiap.mspedidos.domain.adapter.ProdutoPedidoProducer;
-import br.com.fiap.mspedidos.domain.dto.PedidoDtoRequest;
-import br.com.fiap.mspedidos.domain.dto.PedidoDtoResponse;
-import br.com.fiap.mspedidos.domain.dto.PedidoLogisticaDtoRequest;
-import br.com.fiap.mspedidos.domain.dto.ProdutoDtoResponse;
+import br.com.fiap.mspedidos.domain.dto.*;
 import br.com.fiap.mspedidos.domain.entities.ItemEntity;
 import br.com.fiap.mspedidos.domain.entities.StatusPedidoEnum;
 import br.com.fiap.mspedidos.domain.entities.PedidoEntity;
@@ -25,11 +23,17 @@ public class PedidoService {
 
     private final EstoquePedidoProducer estoquePedidoProducer;
     private final ProdutoPedidoProducer produtoPedidoProducer;
+    private final ClientePedidoProducer clientePedidoProducer;
 
-    public PedidoService(PedidoRepository pedidoRepository, EstoquePedidoProducer estoquePedidoProducer, ProdutoPedidoProducer produtoPedidoProducer){
+    public PedidoService(PedidoRepository pedidoRepository,
+                         EstoquePedidoProducer estoquePedidoProducer,
+                         ProdutoPedidoProducer produtoPedidoProducer,
+                         ClientePedidoProducer clientePedidoProducer
+    ){
         this.pedidoRepository = pedidoRepository;
         this.estoquePedidoProducer = estoquePedidoProducer;
         this.produtoPedidoProducer = produtoPedidoProducer;
+        this.clientePedidoProducer = clientePedidoProducer;
     }
 
     private PedidoEntity buscarPedidoEntity(Long id) throws BusinessException {
@@ -56,6 +60,7 @@ public class PedidoService {
     }
 
     public PedidoDtoResponse criar(PedidoDtoRequest pedidoDtoRequest) throws BusinessException {
+        ClienteDtoResponse clienteDtoResponse = this.clientePedidoProducer.obterCliente(pedidoDtoRequest.idCliente());
         final PedidoEntity pedido = new PedidoEntity(
                 pedidoDtoRequest.idCliente(),
                 pedidoDtoRequest.formaPagamento(),
