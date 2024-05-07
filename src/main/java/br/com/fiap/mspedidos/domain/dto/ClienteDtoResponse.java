@@ -3,7 +3,7 @@ package br.com.fiap.mspedidos.domain.dto;
 import java.time.LocalDateTime;
 
 public record ClienteDtoResponse(
-        String codigoCliente,
+        Long codigoCliente,
         String nome,
         String cpf,
         String email,

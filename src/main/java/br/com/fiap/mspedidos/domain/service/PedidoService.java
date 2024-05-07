@@ -60,7 +60,7 @@ public class PedidoService {
     }
 
     public PedidoDtoResponse criar(PedidoDtoRequest pedidoDtoRequest) throws BusinessException {
-        ClienteDtoResponse clienteDtoResponse = this.clientePedidoProducer.obterCliente(pedidoDtoRequest.idCliente());
+        this.validarClienteExiste(pedidoDtoRequest.idCliente());
         final PedidoEntity pedido = new PedidoEntity(
                 pedidoDtoRequest.idCliente(),
                 pedidoDtoRequest.formaPagamento(),
@@ -98,6 +98,12 @@ public class PedidoService {
         pedido.cancelarPedido();
         this.devolverAoEstoqueProduto(pedido);
         pedidoRepository.save(pedido);
+    }
+    private void validarClienteExiste(Long id) throws BusinessException {
+        ClienteDtoResponse clienteDtoResponse = this.clientePedidoProducer.obterCliente(id);
+        if (clienteDtoResponse == null){
+            throw new BusinessException("Cliente " + id + " não encontrado");
+        }
     }
     private void calcularValorPedido(PedidoEntity pedido) throws BusinessException {
         for (ItemEntity item : pedido.getItens()) {

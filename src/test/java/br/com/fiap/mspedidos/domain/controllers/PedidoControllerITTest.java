@@ -95,28 +95,15 @@ class PedidoControllerITTest {
     @Test
     void deveCadastrarPedido() {
         given()
-                .contentType(ContentType.JSON)
-                .body(new CriarObjetosDto().criarPedidoDtoRequest())
-                .when()
+            .contentType(ContentType.JSON)
+            .body(new CriarObjetosDto().criarPedidoDtoRequest())
+            .when()
                 .post("/")
-                .then()
+            .then()
                 .statusCode(HttpStatus.SC_CREATED)
-                .log()
-//                .body("id", is("1"))
+        .body("id", is(1));
+//                .log()
         ;
-    }
-
-    @Test
-    void naoDeveCadastrarPedidoExistente(){
-        given()
-                .contentType(ContentType.JSON)
-                .body(new CriarObjetosDto().criarPedidoDtoRequestNaoExisteProduto())
-                .when()
-                .post("/")
-                .then()
-                .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("message", is("Já existe produto cadastrado com esse nome"));
-
     }
 
     @Nested

@@ -1,5 +1,6 @@
 package br.com.fiap.mspedidos.domain.service;
 
+import br.com.fiap.mspedidos.domain.adapter.ClientePedidoProducer;
 import br.com.fiap.mspedidos.domain.adapter.EstoquePedidoProducer;
 import br.com.fiap.mspedidos.domain.adapter.ProdutoPedidoProducer;
 import br.com.fiap.mspedidos.domain.dto.*;
@@ -32,6 +33,8 @@ class PedidoServiceTest {
     private ProdutoPedidoProducer produtoPedidoProducer;
     @Mock
     private EstoquePedidoProducer estoquePedidoProducer;
+    @Mock
+    private ClientePedidoProducer clientePedidoProducer;
     private AutoCloseable autoCloseable;
 
     @BeforeEach
@@ -88,6 +91,7 @@ class PedidoServiceTest {
         PedidoEntity pedido = new CriarObjetosEntity().criarPedido();
 
         doNothing().when(estoquePedidoProducer).removerEstoque(anyLong(),anyLong());
+        when(clientePedidoProducer.obterCliente(anyLong())).thenReturn(new CriarObjetosDto().criarClienteDtoResponse());
         when(produtoPedidoProducer.obterProduto(anyLong())).thenReturn(new CriarObjetosDto().criarProdutoDtoResponse());
         when(repository.save(any(PedidoEntity.class))).thenReturn(pedido);
         // Act
@@ -97,19 +101,32 @@ class PedidoServiceTest {
         verify(repository, times(1)).save(any(PedidoEntity.class));
     }
     @Test
+    void naoDeveCriarPedidoQuandoNaoEncontrarClienteNoMsCliente() throws BusinessException {
+        //Arrange
+        ClienteDtoResponse clienteDtoResponse = new CriarObjetosDto().criarClienteDtoResponseIdInvalido();
+        PedidoDtoRequest pedidoDtoRequest = new CriarObjetosDto().criarPedidoDtoRequest();
+        PedidoEntity pedido = new CriarObjetosEntity().criarPedido();
+
+        when(clientePedidoProducer.obterCliente(anyLong())).thenReturn(null);
+        // Act
+        final Throwable throwable = assertThrows(BusinessException.class, () -> service.criar(pedidoDtoRequest));
+        // Assert
+        assertEquals("Cliente 1 não encontrado", throwable.getMessage());
+    }
+    @Test
     void naoDeveCriarPedidoQuandoNaoEncontrarProdutoNoMsProduto() throws BusinessException {
         //Arrange
         PedidoDtoRequest pedidoDtoRequest = new CriarObjetosDto().criarPedidoDtoRequest();
         PedidoEntity pedido = new CriarObjetosEntity().criarPedido();
 
         doNothing().when(estoquePedidoProducer).removerEstoque(anyLong(),anyLong());
+        when(clientePedidoProducer.obterCliente(anyLong())).thenReturn(new CriarObjetosDto().criarClienteDtoResponse());
         when(produtoPedidoProducer.obterProduto(anyLong())).thenReturn(null);
         // Act
         final Throwable throwable = assertThrows(BusinessException.class, () -> service.criar(pedidoDtoRequest));
         // Assert
         assertEquals("Produto 1 não encontrado", throwable.getMessage());
     }
-
     @Test
     void naoDeveCriarPedidoQuandoNaoOProdutoNaoTemPreco() throws BusinessException {
         //Arrange
@@ -117,6 +134,7 @@ class PedidoServiceTest {
         PedidoEntity pedido = new CriarObjetosEntity().criarPedido();
 
         doNothing().when(estoquePedidoProducer).removerEstoque(anyLong(),anyLong());
+        when(clientePedidoProducer.obterCliente(anyLong())).thenReturn(new CriarObjetosDto().criarClienteDtoResponse());
         when(produtoPedidoProducer.obterProduto(anyLong())).thenReturn(new CriarObjetosDto().criarProdutoDtoResponseSemPreco());
         // Act
         final Throwable throwable = assertThrows(BusinessException.class, () -> service.criar(pedidoDtoRequest));
@@ -290,6 +308,15 @@ class PedidoServiceTest {
                     criarEndereco()
             );
         }
+
+        private PedidoEntity criarPedidoComClienteInvalido() throws BusinessException {
+            return new PedidoEntity(1000000L,
+                    FormaPagamentoEnum.PIX,
+                    1,
+                    criarListItem(),
+                    criarEndereco()
+            );
+        }
         private PedidoEntity criarPedidoComId() throws BusinessException {
             return new PedidoEntity(1L,
                     StatusPedidoEnum.AGUARDANDO_PAGAMENTO
@@ -314,6 +341,16 @@ class PedidoServiceTest {
 
     @Nested
     class CriarObjetosDto {
+        private ClienteDtoResponse criarClienteDtoResponse(){
+            return new ClienteDtoResponse(1L,"João Silva","123.456.789-09","joao.silva@email.com","12345-678",
+                    "Rua das Flores", "100", "Apto 101", "Centro", "São Paulo", "SP",
+                    "(11) 91234-5678", null);
+        }
+        private ClienteDtoResponse criarClienteDtoResponseIdInvalido(){
+            return new ClienteDtoResponse(100000L,"João Silva","123.456.789-09","joao.silva@email.com","12345-678",
+                    "Rua das Flores", "100", "Apto 101", "Centro", "São Paulo", "SP",
+                    "(11) 91234-5678", null);
+        }
         private ProdutoDtoResponse criarProdutoDtoResponse(){
             return new ProdutoDtoResponse(1,"BR01","CX para embalagem",10,3.99);
         }
