@@ -6,6 +6,9 @@ import br.com.fiap.mspedidos.domain.service.PedidoService;
 import br.com.fiap.mspedidos.infra.swagger.annotations.ApiResponseSwaggerCreate;
 import br.com.fiap.mspedidos.infra.swagger.annotations.ApiResponseSwaggerOk;
 import io.swagger.v3.oas.annotations.Operation;
+
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,6 +85,15 @@ public class PedidoController {
                     pedidoService.entregarPedido(id);
                     return "Pedido Entregue";
                 });
+    }
+
+    @PostMapping("/cliente/possui-pedidos")
+    @Operation(summary = "verifica se cliente possui pedidos no serviço")
+    @ApiResponseSwaggerOk
+    public ResponseEntity<?> listarPedidosPorCliente(@RequestParam long codigoCliente) {
+        return Utils.response(HttpStatus.OK, () -> {
+            return Map.of("possui-pedidos", pedidoService.clientePossuiPedidos(codigoCliente));
+        });
     }
 }
 

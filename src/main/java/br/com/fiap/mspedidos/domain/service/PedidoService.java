@@ -47,6 +47,10 @@ public class PedidoService {
         return pedidoRepository.findByIdCliente(idCliente).stream().map(PedidoEntity::toDto).toList();
     }
 
+    public boolean clientePossuiPedidos(long idCliente){
+        return pedidoRepository.existsByIdCliente(idCliente);
+    }
+
     public List<PedidoDtoResponse> listarPedidosPorStatus(StatusPedidoEnum statusPedido) throws BusinessException {
         return pedidoRepository.findByStatusPedido(statusPedido).stream().map(PedidoEntity::toDto).toList();
     }

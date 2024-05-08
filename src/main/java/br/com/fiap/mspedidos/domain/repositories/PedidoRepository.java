@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<PedidoEntity, Long> {
+    boolean existsByIdCliente(Long idCliente);
     List<PedidoEntity> findByIdCliente(Long idCliente);
     List<PedidoEntity> findByStatusPedido(StatusPedidoEnum statusPedido);
 }

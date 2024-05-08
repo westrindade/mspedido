@@ -3,7 +3,6 @@ package br.com.fiap.mspedidos.domain.controllers;
 import br.com.fiap.mspedidos.domain.dto.EnderecoDtoRequest;
 import br.com.fiap.mspedidos.domain.dto.ItemPedidoDtoRequest;
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoRequest;
-import br.com.fiap.mspedidos.domain.dto.ProdutoDtoResponse;
 import br.com.fiap.mspedidos.domain.entities.FormaPagamentoEnum;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -35,6 +34,29 @@ class PedidoControllerITTest {
         RestAssured.port = porta;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
+
+    @Test
+    void deveVerificarSeClientePossuiPedidos() {
+        given()
+            .formParam("codigoCliente", 1)
+        .when()
+            .post("cliente/possui-pedidos")
+        .then()
+            .statusCode(HttpStatus.SC_OK)
+            .body("possui-pedidos", is(true));
+    }
+
+    @Test
+    void deveVerificarSeClienteNaoPossuiPedidos() {
+        given()
+            .formParam("codigoCliente", 99)
+        .when()
+            .post("cliente/possui-pedidos")
+        .then()
+            .statusCode(HttpStatus.SC_OK)
+            .body("possui-pedidos", is(false));
+    }
+
     @Test
     void deveListarPedidosPorCliente() {
         given()
