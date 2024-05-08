@@ -1,12 +1,11 @@
 package br.com.fiap.mspedidos.domain.dto;
 
-import br.com.fiap.mspedidos.domain.entities.FormaPagamentoEnum;
-import br.com.fiap.mspedidos.domain.entities.ItemEntity;
-import br.com.fiap.mspedidos.domain.entities.PedidoEntity;
-import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import br.com.fiap.mspedidos.domain.entities.FormaPagamentoEnum;
+import br.com.fiap.mspedidos.domain.entities.ItemEntity;
+import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
 
 public record PedidoDtoRequest(
         Long idCliente,

@@ -1,12 +1,14 @@
 package br.com.fiap.mspedidos.domain.entities;
 
-import br.com.fiap.mspedidos.domain.entities.ItemEntity;
-import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
 
 class ItensTest {
     @Test

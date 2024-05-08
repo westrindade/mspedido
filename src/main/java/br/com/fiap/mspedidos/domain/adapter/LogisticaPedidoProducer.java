@@ -1,10 +1,10 @@
 package br.com.fiap.mspedidos.domain.adapter;
 
-import br.com.fiap.mspedidos.domain.dto.PedidoLogisticaDtoRequest;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import br.com.fiap.mspedidos.domain.dto.PedidoLogisticaDtoRequest;
 
 @FeignClient(name = "logistica", url = "${logistica.url}")
 public interface LogisticaPedidoProducer {

@@ -1,12 +1,21 @@
 package br.com.fiap.mspedidos.domain.service;
 
-import br.com.fiap.mspedidos.domain.adapter.ClientePedidoProducer;
-import br.com.fiap.mspedidos.domain.adapter.EstoquePedidoProducer;
-import br.com.fiap.mspedidos.domain.adapter.ProdutoPedidoProducer;
-import br.com.fiap.mspedidos.domain.dto.*;
-import br.com.fiap.mspedidos.domain.entities.*;
-import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
-import br.com.fiap.mspedidos.domain.repositories.PedidoRepository;
+import static org.assertj.core.api.CollectionAssert.assertThatCollection;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -15,14 +24,22 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.CollectionAssert.assertThatCollection;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import br.com.fiap.mspedidos.domain.adapter.ClientePedidoProducer;
+import br.com.fiap.mspedidos.domain.adapter.EstoquePedidoProducer;
+import br.com.fiap.mspedidos.domain.adapter.ProdutoPedidoProducer;
+import br.com.fiap.mspedidos.domain.dto.ClienteDtoResponse;
+import br.com.fiap.mspedidos.domain.dto.EnderecoDtoRequest;
+import br.com.fiap.mspedidos.domain.dto.ItemPedidoDtoRequest;
+import br.com.fiap.mspedidos.domain.dto.PedidoDtoRequest;
+import br.com.fiap.mspedidos.domain.dto.PedidoDtoResponse;
+import br.com.fiap.mspedidos.domain.dto.ProdutoDtoResponse;
+import br.com.fiap.mspedidos.domain.entities.EnderecoPedido;
+import br.com.fiap.mspedidos.domain.entities.FormaPagamentoEnum;
+import br.com.fiap.mspedidos.domain.entities.ItemEntity;
+import br.com.fiap.mspedidos.domain.entities.PedidoEntity;
+import br.com.fiap.mspedidos.domain.entities.StatusPedidoEnum;
+import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
+import br.com.fiap.mspedidos.domain.repositories.PedidoRepository;
 
 class PedidoServiceTest {
     @InjectMocks
@@ -103,9 +120,7 @@ class PedidoServiceTest {
     @Test
     void naoDeveCriarPedidoQuandoNaoEncontrarClienteNoMsCliente() throws BusinessException {
         //Arrange
-        ClienteDtoResponse clienteDtoResponse = new CriarObjetosDto().criarClienteDtoResponseIdInvalido();
         PedidoDtoRequest pedidoDtoRequest = new CriarObjetosDto().criarPedidoDtoRequest();
-        PedidoEntity pedido = new CriarObjetosEntity().criarPedido();
 
         when(clientePedidoProducer.obterCliente(anyLong())).thenReturn(null);
         // Act
@@ -117,7 +132,6 @@ class PedidoServiceTest {
     void naoDeveCriarPedidoQuandoNaoEncontrarProdutoNoMsProduto() throws BusinessException {
         //Arrange
         PedidoDtoRequest pedidoDtoRequest = new CriarObjetosDto().criarPedidoDtoRequest();
-        PedidoEntity pedido = new CriarObjetosEntity().criarPedido();
 
         doNothing().when(estoquePedidoProducer).removerEstoque(anyLong(),anyLong());
         when(clientePedidoProducer.obterCliente(anyLong())).thenReturn(new CriarObjetosDto().criarClienteDtoResponse());
@@ -131,7 +145,6 @@ class PedidoServiceTest {
     void naoDeveCriarPedidoQuandoNaoOProdutoNaoTemPreco() throws BusinessException {
         //Arrange
         PedidoDtoRequest pedidoDtoRequest = new CriarObjetosDto().criarPedidoDtoRequest();
-        PedidoEntity pedido = new CriarObjetosEntity().criarPedido();
 
         doNothing().when(estoquePedidoProducer).removerEstoque(anyLong(),anyLong());
         when(clientePedidoProducer.obterCliente(anyLong())).thenReturn(new CriarObjetosDto().criarClienteDtoResponse());
@@ -159,7 +172,6 @@ class PedidoServiceTest {
     @Test
     void naoDeveConfirmarPagamento() throws BusinessException {
         //Arrange
-        PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComId();
         // Act
         final Throwable throwable = assertThrows(BusinessException.class, () -> service.pagar(anyLong()));
         // Assert
@@ -184,7 +196,6 @@ class PedidoServiceTest {
     @Test
     void naoDeveAlterarStatusPedidoParaAguardarEntrega() throws BusinessException {
         //Arrange
-        PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComId();
         // Act
         final Throwable throwable = assertThrows(BusinessException.class, () -> service.alterarStatusPedidoParaAguardarEntrega(anyLong()));
         // Assert
@@ -236,7 +247,6 @@ class PedidoServiceTest {
     @Test
     void naoDeveEntregarPedido() throws BusinessException {
         //Arrange
-        PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComId();
         // Act
         final Throwable throwable = assertThrows(BusinessException.class, () -> service.entregarPedido(anyLong()));
         // Assert
@@ -277,7 +287,6 @@ class PedidoServiceTest {
     @Test
     void naoDeveCancelarPedido() throws BusinessException {
         //Arrange
-        PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComId();
         // Act
         final Throwable throwable = assertThrows(BusinessException.class, () -> service.cancelarPedido(anyLong()));
         // Assert
