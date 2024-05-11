@@ -1,6 +1,6 @@
 package br.com.fiap.mspedidos.domain.entities;
 
-import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
+import br.com.fiap.estrutura.exception.BusinessException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

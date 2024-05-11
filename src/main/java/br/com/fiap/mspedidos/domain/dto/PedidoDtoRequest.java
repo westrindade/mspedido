@@ -5,7 +5,7 @@ import java.util.List;
 
 import br.com.fiap.mspedidos.domain.entities.FormaPagamentoEnum;
 import br.com.fiap.mspedidos.domain.entities.ItemEntity;
-import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
+import br.com.fiap.estrutura.exception.BusinessException;
 
 public record PedidoDtoRequest(
         Long idCliente,

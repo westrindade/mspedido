@@ -5,7 +5,7 @@ import br.com.fiap.mspedidos.domain.adapter.LogisticaPedidoProducer;
 import br.com.fiap.mspedidos.domain.adapter.ProdutoPedidoProducer;
 import br.com.fiap.mspedidos.domain.dto.*;
 import br.com.fiap.mspedidos.domain.entities.*;
-import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
+import br.com.fiap.estrutura.exception.BusinessException;
 import br.com.fiap.mspedidos.domain.service.PedidoService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

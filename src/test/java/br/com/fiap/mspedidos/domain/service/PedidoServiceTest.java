@@ -38,7 +38,7 @@ import br.com.fiap.mspedidos.domain.entities.FormaPagamentoEnum;
 import br.com.fiap.mspedidos.domain.entities.ItemEntity;
 import br.com.fiap.mspedidos.domain.entities.PedidoEntity;
 import br.com.fiap.mspedidos.domain.entities.StatusPedidoEnum;
-import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
+import br.com.fiap.estrutura.exception.BusinessException;
 import br.com.fiap.mspedidos.domain.repositories.PedidoRepository;
 
 class PedidoServiceTest {

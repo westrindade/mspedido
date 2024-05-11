@@ -1,7 +1,7 @@
 package br.com.fiap.mspedidos.domain.entities;
 
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoResponse;
-import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
+import br.com.fiap.estrutura.exception.BusinessException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 

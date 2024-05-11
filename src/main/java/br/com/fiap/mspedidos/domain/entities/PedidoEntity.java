@@ -4,7 +4,7 @@ import br.com.fiap.mspedidos.domain.dto.ItemPedidoDtoResponse;
 import br.com.fiap.mspedidos.domain.dto.PedidoDtoResponse;
 import br.com.fiap.mspedidos.domain.dto.PedidoLogisticaDtoRequest;
 import br.com.fiap.mspedidos.domain.dto.ProdutoLogisticaDtoRequest;
-import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
+import br.com.fiap.estrutura.exception.BusinessException;
 import jakarta.persistence.*;
 import lombok.Builder;
 

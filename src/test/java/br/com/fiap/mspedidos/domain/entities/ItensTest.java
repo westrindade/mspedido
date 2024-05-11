@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
 
-import br.com.fiap.mspedidos.domain.exceptions.BusinessException;
+import br.com.fiap.estrutura.exception.BusinessException;
 
 class ItensTest {
     @Test

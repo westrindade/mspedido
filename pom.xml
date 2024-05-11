@@ -79,6 +79,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>br.com.fiap</groupId>
+			<artifactId>estrutura</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
