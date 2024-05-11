@@ -73,7 +73,8 @@ class PedidoServiceTest {
         assertNotNull(pedidos);
         assertThatCollection(pedidos)
                 .hasSize(2)
-                .extracting(PedidoDtoResponse::id);
+//                .extracting(PedidoDtoResponse::id)
+        ;
         verify(repository, times(1)).findByIdCliente(anyLong());
     }
     @Test
@@ -87,7 +88,8 @@ class PedidoServiceTest {
         assertNotNull(pedidos);
         assertThatCollection(pedidos)
                 .hasSize(2)
-                .extracting(PedidoDtoResponse::id);
+//                .extracting(PedidoDtoResponse::id)
+        ;
         verify(repository, times(1)).findByStatusPedido(any(StatusPedidoEnum.class));
     }
     @Test
@@ -118,7 +120,7 @@ class PedidoServiceTest {
         verify(repository, times(1)).save(any(PedidoEntity.class));
     }
     @Test
-    void naoDeveCriarPedidoQuandoNaoEncontrarClienteNoMsCliente() throws BusinessException {
+    void naoDeveCriarPedidoQuandoNaoEncontrarClienteNoMsCliente() {
         //Arrange
         PedidoDtoRequest pedidoDtoRequest = new CriarObjetosDto().criarPedidoDtoRequest();
 
@@ -129,7 +131,7 @@ class PedidoServiceTest {
         assertEquals("Cliente 1 não encontrado", throwable.getMessage());
     }
     @Test
-    void naoDeveCriarPedidoQuandoNaoEncontrarProdutoNoMsProduto() throws BusinessException {
+    void naoDeveCriarPedidoQuandoNaoEncontrarProdutoNoMsProduto() {
         //Arrange
         PedidoDtoRequest pedidoDtoRequest = new CriarObjetosDto().criarPedidoDtoRequest();
 
@@ -142,7 +144,7 @@ class PedidoServiceTest {
         assertEquals("Produto 1 não encontrado", throwable.getMessage());
     }
     @Test
-    void naoDeveCriarPedidoQuandoNaoOProdutoNaoTemPreco() throws BusinessException {
+    void naoDeveCriarPedidoQuandoNaoOProdutoNaoTemPreco() {
         //Arrange
         PedidoDtoRequest pedidoDtoRequest = new CriarObjetosDto().criarPedidoDtoRequest();
 
@@ -170,7 +172,7 @@ class PedidoServiceTest {
         verify(repository, times(1)).save(any(PedidoEntity.class));
     }
     @Test
-    void naoDeveConfirmarPagamento() throws BusinessException {
+    void naoDeveConfirmarPagamento() {
         //Arrange
         // Act
         final Throwable throwable = assertThrows(BusinessException.class, () -> service.pagar(anyLong()));
@@ -194,7 +196,7 @@ class PedidoServiceTest {
         verify(repository, times(1)).save(any(PedidoEntity.class));
     }
     @Test
-    void naoDeveAlterarStatusPedidoParaAguardarEntrega() throws BusinessException {
+    void naoDeveAlterarStatusPedidoParaAguardarEntrega() {
         //Arrange
         // Act
         final Throwable throwable = assertThrows(BusinessException.class, () -> service.alterarStatusPedidoParaAguardarEntrega(anyLong()));
@@ -203,7 +205,7 @@ class PedidoServiceTest {
         verify(repository, times(1)).findById(anyLong());
     }
     @Test
-    void naoDeveAlterarStatusPedidoParaAguardarEntregaPorStatusEtapaDivergente() throws BusinessException {
+    void naoDeveAlterarStatusPedidoParaAguardarEntregaPorStatusEtapaDivergente() {
         //Arrange
         PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComIdComStatusEntregue();
 
@@ -232,7 +234,7 @@ class PedidoServiceTest {
         verify(repository, times(2)).save(any(PedidoEntity.class));
     }
     @Test
-    void naoDeveEntregarPedidoPorStatusEtapaDivergente() throws BusinessException {
+    void naoDeveEntregarPedidoPorStatusEtapaDivergente() {
         //Arrange
         PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComId();
 
@@ -245,7 +247,7 @@ class PedidoServiceTest {
         verify(repository, times(1)).findById(anyLong());
     }
     @Test
-    void naoDeveEntregarPedido() throws BusinessException {
+    void naoDeveEntregarPedido() {
         //Arrange
         // Act
         final Throwable throwable = assertThrows(BusinessException.class, () -> service.entregarPedido(anyLong()));
@@ -272,7 +274,7 @@ class PedidoServiceTest {
         verify(repository, times(1)).save(any(PedidoEntity.class));
     }
     @Test
-    void naoDeveCancelarPedidoPorStatusEtapaDivergente() throws BusinessException {
+    void naoDeveCancelarPedidoPorStatusEtapaDivergente() {
         //Arrange
         PedidoEntity pedido = new CriarObjetosEntity().criarPedidoComIdComStatusCancelado();
 
@@ -285,7 +287,7 @@ class PedidoServiceTest {
         verify(repository, times(1)).findById(anyLong());
     }
     @Test
-    void naoDeveCancelarPedido() throws BusinessException {
+    void naoDeveCancelarPedido() {
         //Arrange
         // Act
         final Throwable throwable = assertThrows(BusinessException.class, () -> service.cancelarPedido(anyLong()));
@@ -318,30 +320,22 @@ class PedidoServiceTest {
             );
         }
 
-        private PedidoEntity criarPedidoComClienteInvalido() throws BusinessException {
-            return new PedidoEntity(1000000L,
-                    FormaPagamentoEnum.PIX,
-                    1,
-                    criarListItem(),
-                    criarEndereco()
-            );
-        }
-        private PedidoEntity criarPedidoComId() throws BusinessException {
+        private PedidoEntity criarPedidoComId() {
             return new PedidoEntity(1L,
                     StatusPedidoEnum.AGUARDANDO_PAGAMENTO
             );
         }
-        private PedidoEntity criarPedidoComIdComStatusPago() throws BusinessException {
+        private PedidoEntity criarPedidoComIdComStatusPago() {
             return new PedidoEntity(1L,
                     StatusPedidoEnum.PAGO
             );
         }
-        private PedidoEntity criarPedidoComIdComStatusEntregue() throws BusinessException {
+        private PedidoEntity criarPedidoComIdComStatusEntregue() {
             return new PedidoEntity(1L,
                     StatusPedidoEnum.ENTREGUE
             );
         }
-        private PedidoEntity criarPedidoComIdComStatusCancelado() throws BusinessException {
+        private PedidoEntity criarPedidoComIdComStatusCancelado() {
             return new PedidoEntity(1L,
                     StatusPedidoEnum.CANCELADO
             );
@@ -355,11 +349,7 @@ class PedidoServiceTest {
                     "Rua das Flores", "100", "Apto 101", "Centro", "São Paulo", "SP",
                     "(11) 91234-5678", null);
         }
-        private ClienteDtoResponse criarClienteDtoResponseIdInvalido(){
-            return new ClienteDtoResponse(100000L,"João Silva","123.456.789-09","joao.silva@email.com","12345-678",
-                    "Rua das Flores", "100", "Apto 101", "Centro", "São Paulo", "SP",
-                    "(11) 91234-5678", null);
-        }
+
         private ProdutoDtoResponse criarProdutoDtoResponse(){
             return new ProdutoDtoResponse(1,"BR01","CX para embalagem",10,3.99);
         }

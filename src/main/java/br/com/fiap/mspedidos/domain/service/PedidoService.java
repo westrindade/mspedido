@@ -104,9 +104,13 @@ public class PedidoService {
         pedidoRepository.save(pedido);
     }
     private void validarClienteExiste(Long id) throws BusinessException {
-        ClienteDtoResponse clienteDtoResponse = this.clientePedidoProducer.obterCliente(id);
-        if (clienteDtoResponse == null){
-            throw new BusinessException("Cliente " + id + " não encontrado");
+        try {
+            ClienteDtoResponse clienteDtoResponse = this.clientePedidoProducer.obterCliente(id);
+            if (clienteDtoResponse == null){
+                throw new BusinessException("Cliente " + id + " não encontrado");
+            }
+        } catch (Exception ex) {
+            throw new BusinessException("Conexão com msCliente não estabelecida");
         }
     }
     private void calcularValorPedido(PedidoEntity pedido) throws BusinessException {
@@ -125,14 +129,22 @@ public class PedidoService {
     private BigDecimal calcularValorItem(Long quantidade, double valorUnitario) {
         return BigDecimal.valueOf( quantidade * valorUnitario);
     }
-    private void removerEstoqueProduto(PedidoEntity pedido) {
-        pedido.getItens().forEach(item -> {
-            this.estoquePedidoProducer.removerEstoque(item.getIdProduto(),item.getQuantidade());
-        });
+    private void removerEstoqueProduto(PedidoEntity pedido) throws BusinessException {
+        try{
+            pedido.getItens().forEach(item -> {
+                this.estoquePedidoProducer.removerEstoque(item.getIdProduto(),item.getQuantidade());
+            });
+        } catch (Exception ex) {
+            throw new BusinessException("Conexão com msProduto não estabelecida");
+        }
     }
-    private void devolverAoEstoqueProduto(PedidoEntity pedido) {
-        pedido.getItens().forEach(item -> {
-            this.estoquePedidoProducer.devolverAoEstoque(item.getIdProduto(),item.getQuantidade());
-        });
+    private void devolverAoEstoqueProduto(PedidoEntity pedido) throws BusinessException {
+        try{
+            pedido.getItens().forEach(item -> {
+                this.estoquePedidoProducer.devolverAoEstoque(item.getIdProduto(),item.getQuantidade());
+            });
+        } catch (Exception ex) {
+            throw new BusinessException("Conexão com msProduto não estabelecida");
+        }
     }
 }

@@ -115,6 +115,29 @@ class PedidoControllerITTest {
                 .body("message", is("Pedido não encontrado"));
     }
     @Test
+    void naoConectouComMsCliente() {
+        given()
+                .contentType(ContentType.JSON)
+                .body(new CriarObjetosDto().criarPedidoDtoRequest())
+                .when()
+                .post("/")
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", is("Conexão com msCliente não estabelecida"));
+    }
+    @Test
+    void naoConectouComMsProduto() {
+        given()
+                .contentType(ContentType.JSON)
+                .body(new CriarObjetosDto().criarPedidoDtoRequest())
+                .when()
+                .post("/")
+                .then()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", is("Conexão com msProduto não estabelecida"));
+    }
+
+    @Test
     void deveCadastrarPedido() {
         given()
             .contentType(ContentType.JSON)
