@@ -2,7 +2,7 @@ package br.com.fiap.mspedidos.domain.schedule;
 
 import br.com.fiap.mspedidos.domain.adapter.EstoquePedidoProducer;
 import br.com.fiap.mspedidos.domain.adapter.LogisticaPedidoProducer;
-import br.com.fiap.mspedidos.domain.adapter.ProdutoPedidoProducer;
+import br.com.fiap.mspedidos.domain.adapter.ProdutoPedidoConsumer;
 import br.com.fiap.mspedidos.domain.dto.*;
 import br.com.fiap.mspedidos.domain.entities.*;
 import br.com.fiap.estrutura.exception.BusinessException;
@@ -32,7 +32,7 @@ class AlterarStatusPedidoParaAguardandoEntregaTest {
     @Mock
     LogisticaPedidoProducer logistica;
     @Mock
-    private ProdutoPedidoProducer produtoPedidoProducer;
+    private ProdutoPedidoConsumer produtoPedidoConsumer;
     @Mock
     private EstoquePedidoProducer estoquePedidoProducer;
 

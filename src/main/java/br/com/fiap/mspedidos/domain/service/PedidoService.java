@@ -1,8 +1,8 @@
 package br.com.fiap.mspedidos.domain.service;
 
-import br.com.fiap.mspedidos.domain.adapter.ClientePedidoProducer;
+import br.com.fiap.mspedidos.domain.adapter.ClientePedidoConsumer;
 import br.com.fiap.mspedidos.domain.adapter.EstoquePedidoProducer;
-import br.com.fiap.mspedidos.domain.adapter.ProdutoPedidoProducer;
+import br.com.fiap.mspedidos.domain.adapter.ProdutoPedidoConsumer;
 import br.com.fiap.mspedidos.domain.dto.*;
 import br.com.fiap.mspedidos.domain.entities.ItemEntity;
 import br.com.fiap.mspedidos.domain.entities.StatusPedidoEnum;
@@ -22,18 +22,18 @@ public class PedidoService {
     private final PedidoRepository pedidoRepository;
 
     private final EstoquePedidoProducer estoquePedidoProducer;
-    private final ProdutoPedidoProducer produtoPedidoProducer;
-    private final ClientePedidoProducer clientePedidoProducer;
+    private final ProdutoPedidoConsumer produtoPedidoConsumer;
+    private final ClientePedidoConsumer clientePedidoConsumer;
 
     public PedidoService(PedidoRepository pedidoRepository,
                          EstoquePedidoProducer estoquePedidoProducer,
-                         ProdutoPedidoProducer produtoPedidoProducer,
-                         ClientePedidoProducer clientePedidoProducer
+                         ProdutoPedidoConsumer produtoPedidoConsumer,
+                         ClientePedidoConsumer clientePedidoConsumer
     ){
         this.pedidoRepository = pedidoRepository;
         this.estoquePedidoProducer = estoquePedidoProducer;
-        this.produtoPedidoProducer = produtoPedidoProducer;
-        this.clientePedidoProducer = clientePedidoProducer;
+        this.produtoPedidoConsumer = produtoPedidoConsumer;
+        this.clientePedidoConsumer = clientePedidoConsumer;
     }
 
     private PedidoEntity buscarPedidoEntity(Long id) throws BusinessException {
@@ -105,7 +105,7 @@ public class PedidoService {
     }
     private void validarClienteExiste(Long id) throws BusinessException {
         try {
-            ClienteDtoResponse clienteDtoResponse = this.clientePedidoProducer.obterCliente(id);
+            ClienteDtoResponse clienteDtoResponse = this.clientePedidoConsumer.obterCliente(id);
             if (clienteDtoResponse == null){
                 throw new BusinessException("Cliente " + id + " não encontrado");
             }
@@ -115,7 +115,7 @@ public class PedidoService {
     }
     private void calcularValorPedido(PedidoEntity pedido) throws BusinessException {
         for (ItemEntity item : pedido.getItens()) {
-            ProdutoDtoResponse produtoDtoResponse = this.produtoPedidoProducer.obterProduto(item.getIdProduto());
+            ProdutoDtoResponse produtoDtoResponse = this.produtoPedidoConsumer.obterProduto(item.getIdProduto());
             if (produtoDtoResponse == null) {
                 throw new BusinessException("Produto " + item.getIdProduto() + " não encontrado");
             }

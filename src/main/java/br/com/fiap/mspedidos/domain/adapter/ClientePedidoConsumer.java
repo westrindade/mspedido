@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import br.com.fiap.mspedidos.domain.dto.ClienteDtoResponse;
 
 @FeignClient(name = "cliente", url = "${cliente.url}")
-public interface ClientePedidoProducer {
+public interface ClientePedidoConsumer {
     @GetMapping(value = "/{id}")
     ClienteDtoResponse obterCliente(@PathVariable Long id);
 }

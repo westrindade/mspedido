@@ -24,9 +24,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import br.com.fiap.mspedidos.domain.adapter.ClientePedidoProducer;
+import br.com.fiap.mspedidos.domain.adapter.ClientePedidoConsumer;
 import br.com.fiap.mspedidos.domain.adapter.EstoquePedidoProducer;
-import br.com.fiap.mspedidos.domain.adapter.ProdutoPedidoProducer;
+import br.com.fiap.mspedidos.domain.adapter.ProdutoPedidoConsumer;
 import br.com.fiap.mspedidos.domain.dto.ClienteDtoResponse;
 import br.com.fiap.mspedidos.domain.dto.EnderecoDtoRequest;
 import br.com.fiap.mspedidos.domain.dto.ItemPedidoDtoRequest;
@@ -47,11 +47,11 @@ class PedidoServiceTest {
     @Mock
     private PedidoRepository repository;
     @Mock
-    private ProdutoPedidoProducer produtoPedidoProducer;
+    private ProdutoPedidoConsumer produtoPedidoConsumer;
     @Mock
     private EstoquePedidoProducer estoquePedidoProducer;
     @Mock
-    private ClientePedidoProducer clientePedidoProducer;
+    private ClientePedidoConsumer clientePedidoConsumer;
     private AutoCloseable autoCloseable;
 
     @BeforeEach
@@ -110,8 +110,8 @@ class PedidoServiceTest {
         PedidoEntity pedido = new CriarObjetosEntity().criarPedido();
 
         doNothing().when(estoquePedidoProducer).removerEstoque(anyLong(),anyLong());
-        when(clientePedidoProducer.obterCliente(anyLong())).thenReturn(new CriarObjetosDto().criarClienteDtoResponse());
-        when(produtoPedidoProducer.obterProduto(anyLong())).thenReturn(new CriarObjetosDto().criarProdutoDtoResponse());
+        when(clientePedidoConsumer.obterCliente(anyLong())).thenReturn(new CriarObjetosDto().criarClienteDtoResponse());
+        when(produtoPedidoConsumer.obterProduto(anyLong())).thenReturn(new CriarObjetosDto().criarProdutoDtoResponse());
         when(repository.save(any(PedidoEntity.class))).thenReturn(pedido);
         // Act
         final PedidoDtoResponse pedidoDtoResponse = service.criar(pedidoDtoRequest);
@@ -124,7 +124,7 @@ class PedidoServiceTest {
         //Arrange
         PedidoDtoRequest pedidoDtoRequest = new CriarObjetosDto().criarPedidoDtoRequest();
 
-        when(clientePedidoProducer.obterCliente(anyLong())).thenReturn(null);
+        when(clientePedidoConsumer.obterCliente(anyLong())).thenReturn(null);
         // Act
         final Throwable throwable = assertThrows(BusinessException.class, () -> service.criar(pedidoDtoRequest));
         // Assert
@@ -136,8 +136,8 @@ class PedidoServiceTest {
         PedidoDtoRequest pedidoDtoRequest = new CriarObjetosDto().criarPedidoDtoRequest();
 
         doNothing().when(estoquePedidoProducer).removerEstoque(anyLong(),anyLong());
-        when(clientePedidoProducer.obterCliente(anyLong())).thenReturn(new CriarObjetosDto().criarClienteDtoResponse());
-        when(produtoPedidoProducer.obterProduto(anyLong())).thenReturn(null);
+        when(clientePedidoConsumer.obterCliente(anyLong())).thenReturn(new CriarObjetosDto().criarClienteDtoResponse());
+        when(produtoPedidoConsumer.obterProduto(anyLong())).thenReturn(null);
         // Act
         final Throwable throwable = assertThrows(BusinessException.class, () -> service.criar(pedidoDtoRequest));
         // Assert
@@ -149,8 +149,8 @@ class PedidoServiceTest {
         PedidoDtoRequest pedidoDtoRequest = new CriarObjetosDto().criarPedidoDtoRequest();
 
         doNothing().when(estoquePedidoProducer).removerEstoque(anyLong(),anyLong());
-        when(clientePedidoProducer.obterCliente(anyLong())).thenReturn(new CriarObjetosDto().criarClienteDtoResponse());
-        when(produtoPedidoProducer.obterProduto(anyLong())).thenReturn(new CriarObjetosDto().criarProdutoDtoResponseSemPreco());
+        when(clientePedidoConsumer.obterCliente(anyLong())).thenReturn(new CriarObjetosDto().criarClienteDtoResponse());
+        when(produtoPedidoConsumer.obterProduto(anyLong())).thenReturn(new CriarObjetosDto().criarProdutoDtoResponseSemPreco());
         // Act
         final Throwable throwable = assertThrows(BusinessException.class, () -> service.criar(pedidoDtoRequest));
         // Assert
