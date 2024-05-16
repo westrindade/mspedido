@@ -5,10 +5,13 @@ import br.com.fiap.mspedidos.domain.dto.PedidoLogisticaDtoRequest;
 import br.com.fiap.mspedidos.domain.entities.StatusPedidoEnum;
 import br.com.fiap.estrutura.exception.BusinessException;
 import br.com.fiap.mspedidos.domain.service.PedidoService;
+
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,9 +26,7 @@ public class AlterarStatusPedidoParaAguardandoEntrega {
         this.logisticaPedidoProducer = logisticaPedidoProducer;
     }
 
-    private final long SEGUNDOS = 1000;
-
-    @Scheduled(fixedRate = SEGUNDOS)
+    @Scheduled(fixedRate = 60, timeUnit = TimeUnit.SECONDS)
     public void iniciar() {
 
         System.out.println("Iniciando AlterarStatusPedidoParaAguardandoEntrega [" + LocalDateTime.now() + "]");
