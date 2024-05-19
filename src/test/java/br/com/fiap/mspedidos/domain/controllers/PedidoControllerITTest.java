@@ -10,12 +10,9 @@ import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Profile;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +20,6 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 @Profile("local")
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PedidoControllerITTest {
     @LocalServerPort
@@ -165,23 +161,6 @@ class PedidoControllerITTest {
             return new PedidoDtoRequest(
                     1L,
                     criarListItemPedidoDtoRequest(),
-                    FormaPagamentoEnum.PIX,
-                    1,
-                    new EnderecoDtoRequest("06550-000","Rua Céu","416","","Green Hills","Pirapora","SP")
-            );
-        }
-        private ItemPedidoDtoRequest criarItemPedidoDtoRequestNaoExistente(){
-            return new ItemPedidoDtoRequest(10000L,1L);
-        }
-        private List<ItemPedidoDtoRequest> criarListItemPedidoDtoRequestNaoExisteProduto() {
-            List<ItemPedidoDtoRequest> itemPedidoDtoRequestList = new ArrayList<>();
-            itemPedidoDtoRequestList.add(criarItemPedidoDtoRequest());
-            return itemPedidoDtoRequestList;
-        }
-        private PedidoDtoRequest criarPedidoDtoRequestNaoExisteProduto(){
-            return new PedidoDtoRequest(
-                    1L,
-                    criarListItemPedidoDtoRequestNaoExisteProduto(),
                     FormaPagamentoEnum.PIX,
                     1,
                     new EnderecoDtoRequest("06550-000","Rua Céu","416","","Green Hills","Pirapora","SP")

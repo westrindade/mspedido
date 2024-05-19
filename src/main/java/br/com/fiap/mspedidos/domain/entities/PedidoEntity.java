@@ -6,8 +6,6 @@ import br.com.fiap.mspedidos.domain.dto.PedidoLogisticaDtoRequest;
 import br.com.fiap.mspedidos.domain.dto.ProdutoLogisticaDtoRequest;
 import br.com.fiap.estrutura.exception.BusinessException;
 import jakarta.persistence.*;
-import lombok.Builder;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -39,7 +37,6 @@ public class PedidoEntity {
     @Column(name = "dt_cancelamento")
     private LocalDateTime dataCancelamento;
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @Builder.Default
     private List<ItemEntity> itens;
     @Embedded
     private EnderecoPedido endereco = new EnderecoPedido();
