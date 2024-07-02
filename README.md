@@ -1,6 +1,6 @@
 
 # 🚀 mspedido
-Tech-challenge Fase 4 com temática de criar microserviço. 
+Tech-challenge Fase 5 com temática de e-Commerce. 
 
 ## 🛠️ Tecnologias
 
