@@ -6,7 +6,7 @@ Tech-challenge Fase 4 com temática de criar microserviço.
 
 ![Java](https://skillicons.dev/icons?i=java)Java 17
 
-![Spring](https://skillicons.dev/icons?i=spring)Spring Boot 3.1.3
+![Spring](https://skillicons.dev/icons?i=spring)Spring Boot 3.2.6
 
 ![Spring](https://skillicons.dev/icons?i=spring)
 Spring Data JPA
@@ -22,9 +22,6 @@ H2
 
 ![Java](https://skillicons.dev/icons?i=java)
 Lombok
-
-![Java](https://skillicons.dev/icons?i=java)
-Bean Validation
 
 ![Docker](https://skillicons.dev/icons?i=docker)
 Docker
